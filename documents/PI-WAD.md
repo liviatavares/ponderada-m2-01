@@ -6,7 +6,8 @@ EventCalendar
 
 #### Autor do projeto
 
-Lívia Sabóia Tavares
+Lívia Sabóia Tavares 
+T18, Módulo 2, Grupo 01
 
 ## Sumário
 
@@ -18,9 +19,9 @@ Lívia Sabóia Tavares
 
 <br>
 
-## <a name="c1"></a>1. Introdução (semana 3)
+## <a name="c1"></a>1. Introdução
 
-O **EventCalendar:**, uma plataforma de eventos com gerenciamento de inscrições (opção 3), é um website simples e acessível, que tem como objetivo tornar mais fácil a acessibilidade a inscrições em eventos e compra de ingressos. Com ele, é possível:
+O **EventCalendar**, uma plataforma de eventos com gerenciamento de inscrições (opção 3), é um website simples e acessível, que tem como objetivo tornar mais fácil a acessibilidade a inscrições em eventos e compra de ingressos. Com ele, é possível:
 
 1. Visualizar eventos a um certo raio de distância do usuário e filtrar por proximidade
 
@@ -76,16 +77,16 @@ Critério de aceite 2 | CR2: O usuário poderá também selecionar manualmente s
 
 ## <a name="c3"></a>3. Projeto da Aplicação Web
 
-### 3.1. Modelagem do banco de dados  (Semana 3)
+### 3.1. Modelagem do banco de dados
 
 *Posicione aqui os diagramas de modelos relacionais do seu banco de dados, apresentando todos os esquemas de tabelas e suas relações. Utilize texto para complementar suas explicações, se necessário.*
 
 *Posicione também o modelo físico com o Schema do BD (arquivo .sql)*
 
-### 3.1.1 BD e Models (Semana 5)
+### 3.1.1 BD e Models
 *Descreva aqui os Models implementados no sistema web*
 
-### 3.2. Arquitetura (Semana 5)
+### 3.2. Arquitetura
 
 *Posicione aqui o diagrama de arquitetura da sua solução de aplicação web. Atualize sempre que necessário.*
 
@@ -122,24 +123,24 @@ Critério de aceite 2 | CR2: O usuário poderá também selecionar manualmente s
 
 *Posicione aqui algumas imagens demonstrativas de seu protótipo de alta fidelidade e o link para acesso ao protótipo completo (mantenha o link sempre público para visualização).*
 
-### 3.6. WebAPI e endpoints (Semana 5)
+### 3.6. WebAPI e endpoints
 
 *Utilize um link para outra página de documentação contendo a descrição completa de cada endpoint. Ou descreva aqui cada endpoint criado para seu sistema.*  
 
-### 3.7 Interface e Navegação (Semana 7)
+### 3.7 Interface e Navegação
 
 *Descreva e ilustre aqui o desenvolvimento do frontend do sistema web, explicando brevemente o que foi entregue em termos de código e sistema. Utilize prints de tela para ilustrar.*
 
 ---
 
-## <a name="c4"></a>4. Desenvolvimento da Aplicação Web (Semana 8)
+## <a name="c4"></a>4. Desenvolvimento da Aplicação Web
 
-### 4.1 Demonstração do Sistema Web (Semana 8)
+### 4.1 Demonstração do Sistema Web
 
 *VIDEO: Insira o link do vídeo demonstrativo nesta seção*
 *Descreva e ilustre aqui o desenvolvimento do sistema web completo, explicando brevemente o que foi entregue em termos de código e sistema. Utilize prints de tela para ilustrar.*
 
-### 4.2 Conclusões e Trabalhos Futuros (Semana 8)
+### 4.2 Conclusões e Trabalhos Futuros
 
 *Indique pontos fortes e pontos a melhorar de maneira geral.*
 *Relacione também quaisquer outras ideias que você tenha para melhorias futuras.*
