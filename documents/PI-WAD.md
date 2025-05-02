@@ -7,6 +7,7 @@ EventCalendar
 #### Autor do projeto
 
 Lívia Sabóia Tavares 
+
 T18, Módulo 2, Grupo 01
 
 ## Sumário
@@ -43,11 +44,24 @@ Sua interface será objetiva e visualmente agradável, e terá como missão faci
 
 ### 2.1. Personas
 
+<div align="center">
+<sub>Figura 01 - Persona 01 - Julia Rodrigues</sub>
+<br>
+<br>
 <p align="center">
 <a><img src="/assets/persona1.png" alt="Persona 1 - Julia Rodrigues" border="0"></a>
 </p>
+<sup>Fonte: Material produzido pela autora (2025)</sup>
+<br>
+<br>
+</div>
 
 ### 2.2. User Stories
+
+<div align="center">
+<sub>Tabela 01 - US01</sub>
+<br>
+<br>
 
 Identificação | US01
 --- | ---
@@ -57,6 +71,11 @@ Critério de aceite 1 | CR1: as notificações devem chegar ao usuário por meio
 Critério de aceite 2 | CR2: as notificações devem também aparecer no site. Quando entrar no site, no período de tempo de lembrete para o evento, uma notificação deve aparecer.
 Critérios INVEST | A garantia das notificações não interfere em demais features do site (I); Pode ser ajustada com base no interesse do usuário em atender ou não tal evento (N); Soluciona uma das dores da persona (o não lembrete constante) (V); É fácil de ser estimada em duração e complexidade pelo time de desenvolvimento, e não atrapalha o desenvolvimento de demais integrações (E); Pode ser completa em um período de tempo razoável, por não ser uma contribuição muito complicada ao projeto (S); Pode ser facilmente testada após realizarem-se os critérios de testes para o aceite (por exemplo, demonstrar interesse em um evento no site deve ser o bastante para garantir o funcionamento dessa usabilidade) (T).
 
+<div align="center">
+<sub>Tabela 02 - US02</sub>
+<br>
+<br>
+
 Identificação | US02
 --- | ---
 Persona | Julia Rodrigues
@@ -64,6 +83,10 @@ User Story | "como usuária, quero que o cadastro nos sites de eventos seja unif
 Critério de aceite 1 | CR1: O usuário, ao se cadastrar no EventCalendar, poderá compartilhar seus dados e criar automaticamente um cadastro utilizando os mesmos dados no site externo. Os dados do usuário devem ser um item em comum entre os bancos de dados do site externo e do EventCalendar, após o usuário demonstrar interesse em comprar um evento deste site.
 Critério de aceite 2 | O cadastro somente será criado no site que o usuário demonstrar interesse em comprar o evento, e deverá ser checado por cybersegurança, garantindo que não serão compartilhados com mais nenhum.
 
+<div align="center">
+<sub>Tabela 03 - US03</sub>
+<br>
+<br>
 
 Identificação | US03
 --- | ---
