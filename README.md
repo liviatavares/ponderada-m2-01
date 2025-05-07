@@ -26,30 +26,48 @@ Haverá a integração de um banco de dados relacional, que integrará diversas 
 
 ```
 ponderada-m2-01/
-│
-├── config/                # Arquivos de configuração (ex: conexão com banco)
-│   └── database.js
-├── controllers/           # Lógica de controle das requisições
-│   └── HomeController.js
-├── models/                # Definição de modelos de dados (estrutura do banco)
-│   └── User.js
-├── routes/                # Definição das rotas do sistema
-│   └── index.js
-├── services/              # Serviços auxiliares do sistema
+├── app.js
+├── server.js    # Arquivo principal que inicializa o servidor
+├── package.json    # Gerenciador de dependências do Node.js
+├── package-lock.json    # Gerenciador de dependências do Node.js
+├── .gitattributes
+├── banco_dados.sql
+├── jest.config.js    # Arquivo de configuração do Jest
+├── rest.http    # Teste de endpoints
+├── README.md    # Documentação do projeto (Markdown)
+├── .env    #Arquivo de exemplo para variáveis de ambiente
+├── assets/
+├── config/
+│   ├── database.js
+├── controllers/
+│   ├── userController.js
+├── documents/
+│   ├── PI-WAD.md
+├── models/
+│   ├── userModel.js
+├── routes/
+│   └── frontRoutes.js
+│   └── userRoutes.js
+├── scripts/
+│   └── db.sql
+│   └── runSQLScript.js
+├── services/
 │   └── userService.js
-├── assets/                # Arquivos públicos como imagens e fontes
-├── scripts/               # Arquivos de JavaScript públicos
-├── styles/                # Arquivos CSS públicos
-├── tests/                 # Arquivos de testes unitários
-│   └── example.test.js
-├── .gitignore             # Arquivo para ignorar arquivos no Git
-├── .env.example           # Arquivo de exemplo para variáveis de ambiente
-├── jest.config.js         # Arquivo de configuração do Jest
-├── package-lock.json      # Gerenciador de dependências do Node.js
-├── package.json           # Gerenciador de dependências do Node.js
-├── readme.md              # Documentação do projeto (Markdown)
-├── server.js              # Arquivo principal que inicializa o servidor
-└── rest.http              # Teste de endpoints (opcional)
+├── views/
+│   ├── components/
+│   │   ├── header.ejs
+│   ├── css/
+│   │   ├── style.css
+│   ├── layout/
+│   │   ├── style.css
+│   ├── pages/
+│   │   ├── page1.ejs
+│   │   ├── page2.ejs
+├── tests/
+│   └── userController.test.js
+│   └── userModel.test.js
+│   └── userRoutes.test.js
+│   └── userService.test.js
 ```
 
 * **`config/`**: Configurações do banco de dados e outras configurações do projeto.
@@ -58,6 +76,8 @@ ponderada-m2-01/
 * **`routes/`**: Rotas da aplicação.
 * **`tests/`**: Testes automatizados.
 * **`views/`**: Views da aplicação.
+* **`services/`**: Serviços auxiliares do sistema.
+*  **`scripts/`**: Arquivos de JavaScript públicos.
 
 ### Como executar o projeto localmente
 
