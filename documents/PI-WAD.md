@@ -104,12 +104,24 @@ Critério de aceite 2 | CR2: O usuário poderá também selecionar manualmente s
 
 # Diagrama físico e lógico do banco de dados
 
-O diagrama a seguir foi realizado com o Supabase (um schema). Nele, podem-se observar todas as tabelas criadas.
+O diagrama a seguir foi realizado com o dbdiagram.io. Nele, podem-se observar todas as tabelas criadas.
 
 <div align="center">
-    <sub>Figura 1: Diagrama de tabelas do banco de dados</sub>
+    <sub>Figura 02: Diagrama de tabelas do banco de dados</sub>
     <br>
-    <img src="../assets/modelo-banco" width="80%">
+    <img src="../assets/modelo-banco.png" width="80%">
+    <br>
+    <sup>Fonte: Material produzido pela autora (2025)</sup>
+    <br>
+    <br>
+</div>
+
+Nessa imagem, mostra-se o schema produzido pelo Supabase.
+
+<div align="center">
+    <sub>Figura 03: Schema</sub>
+    <br>
+    <img src="../assets/schema.png" width="80%">
     <br>
     <sup>Fonte: Material produzido pela autora (2025)</sup>
     <br>
@@ -119,91 +131,29 @@ O diagrama a seguir foi realizado com o Supabase (um schema). Nele, podem-se obs
 
 # Descrição de tabelas
 
-1. Tabela eventos
+1. *Tabela eventos*
 
-A tabela eventos tem como atributos id (um inteiro de até 4 dígitos), que é a *chave primária*, nome (texto), tipo (texto), localizacao_evento (texto), data_evento (data) e duracao (timestamp). 
+A tabela eventos tem como atributos id (um inteiro de até 4 dígitos), que é a *chave primária*, nome (texto), tipo (texto), localizacao_evento (texto), data_evento (data) e duracao (time). 
 
-<div align="center">
-    <sub>Figura 2: Tabela eventos</sub>
-    <br>
-    <img src="../assets/eventos.png" width="80%">
-    <br>
-    <sup>Fonte: Material produzido pela autora (2025)</sup>
-    <br>
-    <br>
-</div>
-
-2. Tabela usuários
+2. *Tabela usuários*
 
 A tabela usuários tem como atributos id (um inteiro de até 4 dígitos), que é a *chave primária*, nome (texto), email (texto), localizacao (texto) e data_nascimento (date).
 
-<div align="center">
-    <sub>Figura 3: Tabela usuários</sub>
-    <br>
-    <img src="../assets/usuarios.png" width="80%">
-    <br>
-    <sup>Fonte: Material produzido pela autora (2025)</sup>
-    <br>
-    <br>
-</div>
-
-3. Tabela inscrição
+3. *Tabela inscrição*
 
 A Tabela inscrição tem como atributos id (um inteiro de até 4 dígitos), que é a *chave primária*, user_id (que se relaciona com o id do usuário), evento_id (que se relaciona com o id do evento), data_inscricao (timestamp) e status (varchar(50) - ou seja, um texto com até 50 caracteres).
 
-<div align="center">
-    <sub>Figura 2: Tabela inscrição</sub>
-    <br>
-    <img src="../assets/inscricao.png" width="80%">
-    <br>
-    <sup>Fonte: Material produzido pela autora (2025)</sup>
-    <br>
-    <br>
-</div>
-
-4. Tabela categorias 
+4. *Tabela categorias* 
 
 A tabela categorias tem como atributos id (um inteiro de até 4 dígitos), que é a *chave primária*, e um nome (texto).
 
-<div align="center">
-    <sub>Figura 2: Tabela categorias</sub>
-    <br>
-    <img src="../assets/categorias.png" width="80%">
-    <br>
-    <sup>Fonte: Material produzido pela autora (2025)</sup>
-    <br>
-    <br>
-</div>
-
-5. Tabela favoritos
+5. *Tabela favoritos*
 
 A tabela favoritos tem como atributos user_id (um inteiro de até 4 dígitos), que se relaciona com o id do usuário e é a *chave primária*, e evento_id (um inteiro de até 4 dígitos), que se relaciona com o id do evento, e é outra *chave primária*.  A chave primária composta significa que um mesmo usuário só pode favoritar o mesmo evento uma vez.
 
-<div align="center">
-    <sub>Figura 2: Tabela favoritos</sub>
-    <br>
-    <img src="../assets/favoritos.png" width="80%">
-    <br>
-    <sup>Fonte: Material produzido pela autora (2025)</sup>
-    <br>
-    <br>
-</div>
-
-6. Tabela categoria eventos
+6. *Tabela categoria eventos*
 
 A tabela categoria eventos tem como atributos evento_id (um inteiro de até 4 dígitos), que se relaciona com o id do evento, e é uma *chave primária*, além da categoria_id que se relaciona com o id das categorias, que é outra *chave primária*. A chave primária composta significa que um mesmo evento só pode ter uma categoria.
-
-<div align="center">
-    <sub>Figura 2: Tabela categoria eventos</sub>
-    <br>
-    <img src="../assets/categoria_evento.png" width="80%">
-    <br>
-    <sup>Fonte: Material produzido pela autora (2025)</sup>
-    <br>
-    <br>
-</div>
-
-*Posicione também o modelo físico com o Schema do BD (arquivo .sql)*
 
 ### 3.1.1 BD e Models
 *Descreva aqui os Models implementados no sistema web*
