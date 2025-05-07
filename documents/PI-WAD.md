@@ -109,7 +109,7 @@ O diagrama a seguir foi realizado com o dbdiagram.io. Nele, podem-se observar to
 <div align="center">
     <sub>Figura 02: Diagrama de tabelas do banco de dados</sub>
     <br>
-    <img src="../assets/modelo-banco.png" width="80%">
+    <img src="/assets/modelo_banco.png" width="80%">
     <br>
     <sup>Fonte: Material produzido pela autora (2025)</sup>
     <br>
@@ -121,7 +121,7 @@ Nessa imagem, mostra-se o schema produzido pelo Supabase.
 <div align="center">
     <sub>Figura 03: Schema</sub>
     <br>
-    <img src="../assets/schema.png" width="80%">
+    <img src="/assets/schema.png" width="80%">
     <br>
     <sup>Fonte: Material produzido pela autora (2025)</sup>
     <br>
