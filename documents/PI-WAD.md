@@ -171,7 +171,50 @@ A tabela categoria eventos tem como atributos evento_id (um inteiro de até 4 d�
 
 ### 3.3. Wireframes
 
-*Posicione aqui as imagens do wireframe construído para sua solução e, opcionalmente, o link para acesso (mantenha o link sempre público para visualização).*
+# Introdução: o que são wireframes?
+
+Wireframes são representações visuais simples e esquemáticas de uma página ou tela de um sistema, site ou aplicativo. Eles mostram a estrutura básica do layout, como a disposição de elementos (como menus, botões, imagens e textos), sem focar em design visual ou cores. Em um projeto, os wireframes ajudam a, por exemplo, planejar a navegação e a hierarquia de informações de forma clara e a economizar tempo e recursos, evitando retrabalho no desenvolvimento. Eles funcionam como um “esqueleto” do projeto, servindo de base para as próximas etapas de design e implementação.
+
+# Wireframes do projeto
+
+1. *Tela inicial*
+
+<div align="center">
+    <sub>Figura 04: Wireframe 01</sub>
+    <br>
+    <img src="/assets/wireframe1.png" width="80%">
+    <br>
+    <sup>Fonte: Material produzido pela autora (2025)</sup>
+    <br>
+    <br>
+</div>
+
+2. *Tela de inscrição*
+
+<div align="center">
+    <sub>Figura 05: Wireframe 02</sub>
+    <br>
+    <img src="/assets/wireframe2.png" width="80%">
+    <br>
+    <sup>Fonte: Material produzido pela autora (2025)</sup>
+    <br>
+    <br>
+</div>
+
+3. *Tela de filtragem de eventos*
+
+<div align="center">
+    <sub>Figura 06: Wireframe 03</sub>
+    <br>
+    <img src="/assets/wireframe3.png" width="80%">
+    <br>
+    <sup>Fonte: Material produzido pela autora (2025)</sup>
+    <br>
+    <br>
+</div>
+
+Link para acesso às imagens (google drive): 
+
 
 ### 3.4. Guia de estilos
 
