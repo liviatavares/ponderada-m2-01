@@ -1,6 +1,6 @@
 CREATE TABLE "usuarios" (
   "id" SERIAL PRIMARY KEY,
-  "nome" TEXT NOT NULL,
+  "nome_usuario" TEXT NOT NULL,
   "email" TEXT NOT NULL,
   "localizacao" TEXT NOT NULL,
   "data_nascimento" DATE
@@ -8,11 +8,11 @@ CREATE TABLE "usuarios" (
 
 CREATE TABLE "eventos" (
   "id" SERIAL PRIMARY KEY,
-  "nome" TEXT NOT NULL,
+  "nome_evento" TEXT NOT NULL,
   "tipo" TEXT NOT NULL,
   "localizacao_evento" TEXT NOT NULL,
   "data_evento" DATE,
-  "duracao" TIMESTAMP
+  "duracao" TIME
 );
 
 CREATE TABLE "inscricao" (
@@ -25,7 +25,7 @@ CREATE TABLE "inscricao" (
 
 CREATE TABLE "categorias" (
   "id" SERIAL PRIMARY KEY,
-  "nome" TEXT
+  "nome_categoria" TEXT
 );
 
 CREATE TABLE "categoria_evento" (

@@ -128,6 +128,64 @@ Nessa imagem, mostra-se o schema produzido pelo Supabase.
     <br>
 </div>
 
+# Código SQL
+
+O código SQL utilizado para desenvolver as tabelas foi o seguinte:
+
+``` 
+-- tabela de usuários: contém o nome, id, email, localização e aniversário do usuário.
+-- essas informações são todas extremamente necessárias. por exemplo, a localização ajuda a filtrar
+-- os shows mais perto, e a idade ajuda a não recomendar shows +18 para usuários menores de idade
+CREATE TABLE usuarios (
+  id SERIAL PRIMARY KEY,
+  nome_usuario TEXT NOT NULL,
+  email TEXT NOT NULL,
+  localizacao TEXT NOT NULL,
+  data_nascimento DATE
+);
+
+-- os eventos contém id, nome, tipo (show de música, show de humor, peça de teatro...), localização, data e duração (em horas)
+CREATE TABLE eventos (
+  id SERIAL PRIMARY KEY,
+  nome_evento TEXT NOT NULL,
+  tipo TEXT NOT NULL,
+  localizacao_evento TEXT NOT NULL,
+  data_evento DATE,
+  duracao TIMESTAMP
+);
+
+-- a inscrição contém id da inscrição, id do usuário e do evento, data da inscrição e status.
+-- status pode ser, por exemplo, 'confirmado', 'pendente' ou 'cancelado'.
+CREATE TABLE inscricao (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES usuarios(id) on DELETE CASCADE,
+    evento_id INT REFERENCES eventos(id) on DELETE CASCADE,
+    data_inscricao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(50) 
+);
+
+-- aqui, podem-se filtrar os eventos por tipo, área, etc
+CREATE TABLE categorias (
+    id SERIAL PRIMARY KEY,
+    nome_categoria TEXT
+);
+
+-- essa tabela relaciona a categoria com o evento
+CREATE TABLE categoria_evento (
+    evento_id INT REFERENCES eventos(id),
+    categoria_id INT REFERENCES categorias(id),
+    PRIMARY KEY (evento_id, categoria_id)
+);
+
+-- aqui, o usuário pode marcar um evento como favorito, relacionando os usuários com os eventos
+CREATE TABLE favoritos (
+    user_id INT REFERENCES usuarios(id),
+    evento_id INT REFERENCES eventos(id),
+    PRIMARY KEY (user_id, evento_id)
+);
+```
+
+Para redigi-lo, foi utilizado o Supabase. Seu arquivo SQL pode ser encontrado em `scripts/db.sql`.
 
 # Descrição de tabelas
 
@@ -171,13 +229,13 @@ A tabela categoria eventos tem como atributos evento_id (um inteiro de até 4 d�
 
 ### 3.3. Wireframes
 
-# Introdução: o que são wireframes?
+# 3.3.1 Introdução: o que são wireframes?
 
 Wireframes são representações visuais simples e esquemáticas de uma página ou tela de um sistema, site ou aplicativo. Eles mostram a estrutura básica do layout, como a disposição de elementos (como menus, botões, imagens e textos), sem focar em design visual ou cores. Em um projeto, os wireframes ajudam a, por exemplo, planejar a navegação e a hierarquia de informações de forma clara e a economizar tempo e recursos, evitando retrabalho no desenvolvimento. Eles funcionam como um “esqueleto” do projeto, servindo de base para as próximas etapas de design e implementação.
 
-# Wireframes do projeto
+# 3.3.2 Wireframes do projeto
 
-1. *Tela inicial*
+1. *Tela inicial da interface*
 
 <div align="center">
     <sub>Figura 04: Wireframe 01</sub>
@@ -189,7 +247,19 @@ Wireframes são representações visuais simples e esquemáticas de uma página 
     <br>
 </div>
 
-2. *Tela de inscrição*
+Nessa tela, pode-se observar a homepage do EventCalendar. Nela, é possível ver, de cima para baixo:
+
+1. A header do site, com a logo à esquerda, uma caixa que indica o usuário logado à direita e uma caixa de "meus eventos"
+
+2. Uma barra lateral à esquerda com filtros que o usuário pode aplicar nos eventos, como proximidade, tipo ou duração
+
+3. Os eventos, representados por retângulos, e símbolos que descreveriam brevemente suas características
+
+4. Um texto, acima dos eventos, que convida o usuário a procurar um evento (Algo como "Comece a buscar o melhor evento para você")
+
+Essa tela, além de ser a tela principal do site, atende à funcionalidade pedida pela US03, que diz que o usuário deseja poder filtrar os eventos.
+
+2. *Tela com um lembrete para usuário*
 
 <div align="center">
     <sub>Figura 05: Wireframe 02</sub>
@@ -201,7 +271,9 @@ Wireframes são representações visuais simples e esquemáticas de uma página 
     <br>
 </div>
 
-3. *Tela de filtragem de eventos*
+Nessa tela, pode-se observar o processo de lembrete de um evento que está se aproximando. Ela aparece após o usuário inscrever-se ou favoritar um evento, na tela de visualização de evento. O evento, na homepage, fica em destaque, para indicar sua maior relevância, e uma notificação aparece no site, lembrando que a data do evento está se aproximando.
+
+3. *Tela de visualização de um evento*
 
 <div align="center">
     <sub>Figura 06: Wireframe 03</sub>
@@ -213,8 +285,19 @@ Wireframes são representações visuais simples e esquemáticas de uma página 
     <br>
 </div>
 
-Link para acesso às imagens (google drive): 
+Nessa tela, pode-se observar a tela de visualização de um evento após clicar nele na tela inicial. Nela, pode-se observar:
 
+1. A header do site, com a logo à esquerda, uma caixa que indica o usuário logado à direita e uma caixa de "meus eventos"
+
+2. Uma foto do evento
+
+3. Uma descrição do evento, com todas as informações necessárias
+
+4. Um botão de inscrever-se e uma estrela que representa o botão de "favoritar um evento"
+
+Essa tela se relaciona com a usabilidade geral do usuário no website.
+
+[Clique aqui](https://www.figma.com/design/dexDPEvhRXG7GlU4GPbB7h/Untitled?node-id=0-1&t=uEx67nqFiP5MppRX-1) para acessar o figma com os wireframes mais detalhadamente.
 
 ### 3.4. Guia de estilos
 

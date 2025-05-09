@@ -3,7 +3,7 @@
 -- os shows mais perto, e a idade ajuda a não recomendar shows +18 para usuários menores de idade
 CREATE TABLE usuarios (
   id SERIAL PRIMARY KEY,
-  nome TEXT NOT NULL,
+  nome_usuario TEXT NOT NULL,
   email TEXT NOT NULL,
   localizacao TEXT NOT NULL,
   data_nascimento DATE
@@ -12,7 +12,7 @@ CREATE TABLE usuarios (
 -- os eventos contém id, nome, tipo (show de música, show de humor, peça de teatro...), localização, data e duração (em horas)
 CREATE TABLE eventos (
   id SERIAL PRIMARY KEY,
-  nome TEXT NOT NULL,
+  nome_evento TEXT NOT NULL,
   tipo TEXT NOT NULL,
   localizacao_evento TEXT NOT NULL,
   data_evento DATE,
@@ -32,7 +32,7 @@ CREATE TABLE inscricao (
 -- aqui, podem-se filtrar os eventos por tipo, área, etc
 CREATE TABLE categorias (
     id SERIAL PRIMARY KEY,
-    nome TEXT
+    nome_categoria TEXT
 );
 
 -- essa tabela relaciona a categoria com o evento
