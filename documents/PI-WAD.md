@@ -4,7 +4,7 @@
 
 EventCalendar
 
-#### Autor do projeto
+### Autor do projeto
 
 Lívia Sabóia Tavares 
 
@@ -71,6 +71,8 @@ Critério de aceite 1 | CR1: as notificações devem chegar ao usuário por meio
 Critério de aceite 2 | CR2: as notificações devem também aparecer no site. Quando entrar no site, no período de tempo de lembrete para o evento, uma notificação deve aparecer.
 Critérios INVEST | A garantia das notificações não interfere em demais features do site (I); Pode ser ajustada com base no interesse do usuário em atender ou não tal evento (N); Soluciona uma das dores da persona (o não lembrete constante) (V); É fácil de ser estimada em duração e complexidade pelo time de desenvolvimento, e não atrapalha o desenvolvimento de demais integrações (E); Pode ser completa em um período de tempo razoável, por não ser uma contribuição muito complicada ao projeto (S); Pode ser facilmente testada após realizarem-se os critérios de testes para o aceite (por exemplo, demonstrar interesse em um evento no site deve ser o bastante para garantir o funcionamento dessa usabilidade) (T).
 
+</div>
+
 <div align="center">
 <sub>Tabela 02 - US02</sub>
 <br>
@@ -82,6 +84,8 @@ Persona | Julia Rodrigues
 User Story | "como usuária, quero que o cadastro nos sites de eventos seja unificado, para que isso não se torne um empecilho para comprar um ingresso de um show"
 Critério de aceite 1 | CR1: O usuário, ao se cadastrar no EventCalendar, poderá compartilhar seus dados e criar automaticamente um cadastro utilizando os mesmos dados no site externo. Os dados do usuário devem ser um item em comum entre os bancos de dados do site externo e do EventCalendar, após o usuário demonstrar interesse em comprar um evento deste site.
 Critério de aceite 2 | O cadastro somente será criado no site que o usuário demonstrar interesse em comprar o evento, e deverá ser checado por cybersegurança, garantindo que não serão compartilhados com mais nenhum.
+
+</div>
 
 <div align="center">
 <sub>Tabela 03 - US03</sub>
@@ -95,14 +99,14 @@ User Story | "como usuária, quero poder filtrar os eventos por proximidade, par
 Critério de aceite 1 | CR1: O usuário deve poder compartilhar sua localização com o site, que calculará a distância dos eventos a ele, e mostrará apenas aqueles a um certo raio de distância.
 Critério de aceite 2 | CR2: O usuário poderá também selecionar manualmente sua localização, caso esteja procurando eventos que ocorram perto de outro local. Ao selecionar outra localização senão a atual, o site também mostrará o pedido
 
-
+</div>
 ---
 
 ## <a name="c3"></a>3. Projeto da Aplicação Web
 
 ### 3.1. Modelagem do banco de dados
 
-# Diagrama físico e lógico do banco de dados
+#### Diagrama físico e lógico do banco de dados
 
 O diagrama a seguir foi realizado com o dbdiagram.io. Nele, podem-se observar todas as tabelas criadas.
 
@@ -128,7 +132,7 @@ Nessa imagem, mostra-se o schema produzido pelo Supabase.
     <br>
 </div>
 
-# Código SQL
+#### Código SQL
 
 O código SQL utilizado para desenvolver as tabelas foi o seguinte:
 
@@ -187,29 +191,29 @@ CREATE TABLE favoritos (
 
 Para redigi-lo, foi utilizado o Supabase. Seu arquivo SQL pode ser encontrado em `scripts/db.sql`.
 
-# Descrição de tabelas
+### Descrição de tabelas
 
-1. *Tabela eventos*
+#### 1. *Tabela eventos*
 
 A tabela eventos tem como atributos id (um inteiro de até 4 dígitos), que é a *chave primária*, nome (texto), tipo (texto), localizacao_evento (texto), data_evento (data) e duracao (time). 
 
-2. *Tabela usuários*
+#### 2. *Tabela usuários*
 
 A tabela usuários tem como atributos id (um inteiro de até 4 dígitos), que é a *chave primária*, nome (texto), email (texto), localizacao (texto) e data_nascimento (date).
 
-3. *Tabela inscrição*
+#### 3. *Tabela inscrição*
 
 A Tabela inscrição tem como atributos id (um inteiro de até 4 dígitos), que é a *chave primária*, user_id (que se relaciona com o id do usuário), evento_id (que se relaciona com o id do evento), data_inscricao (timestamp) e status (varchar(50) - ou seja, um texto com até 50 caracteres).
 
-4. *Tabela categorias* 
+#### 4. *Tabela categorias* 
 
 A tabela categorias tem como atributos id (um inteiro de até 4 dígitos), que é a *chave primária*, e um nome (texto).
 
-5. *Tabela favoritos*
+#### 5. *Tabela favoritos*
 
 A tabela favoritos tem como atributos user_id (um inteiro de até 4 dígitos), que se relaciona com o id do usuário e é a *chave primária*, e evento_id (um inteiro de até 4 dígitos), que se relaciona com o id do evento, e é outra *chave primária*.  A chave primária composta significa que um mesmo usuário só pode favoritar o mesmo evento uma vez.
 
-6. *Tabela categoria eventos*
+#### 6. *Tabela categoria eventos*
 
 A tabela categoria eventos tem como atributos evento_id (um inteiro de até 4 dígitos), que se relaciona com o id do evento, e é uma *chave primária*, além da categoria_id que se relaciona com o id das categorias, que é outra *chave primária*. A chave primária composta significa que um mesmo evento só pode ter uma categoria.
 
@@ -229,13 +233,13 @@ A tabela categoria eventos tem como atributos evento_id (um inteiro de até 4 d�
 
 ### 3.3. Wireframes
 
-# 3.3.1 Introdução: o que são wireframes?
+### 3.3.1 Introdução: o que são wireframes?
 
 Wireframes são representações visuais simples e esquemáticas de uma página ou tela de um sistema, site ou aplicativo. Eles mostram a estrutura básica do layout, como a disposição de elementos (como menus, botões, imagens e textos), sem focar em design visual ou cores. Em um projeto, os wireframes ajudam a, por exemplo, planejar a navegação e a hierarquia de informações de forma clara e a economizar tempo e recursos, evitando retrabalho no desenvolvimento. Eles funcionam como um “esqueleto” do projeto, servindo de base para as próximas etapas de design e implementação.
 
-# 3.3.2 Wireframes do projeto
+### 3.3.2 Wireframes do projeto
 
-1. *Tela inicial da interface*
+#### 1. *Tela inicial da interface*
 
 <div align="center">
     <sub>Figura 04: Wireframe 01</sub>
@@ -259,7 +263,7 @@ Nessa tela, pode-se observar a homepage do EventCalendar. Nela, é possível ver
 
 Essa tela, além de ser a tela principal do site, atende à funcionalidade pedida pela US03, que diz que o usuário deseja poder filtrar os eventos.
 
-2. *Tela com um lembrete para usuário*
+#### 2. *Tela com um lembrete para usuário*
 
 <div align="center">
     <sub>Figura 05: Wireframe 02</sub>
@@ -273,7 +277,7 @@ Essa tela, além de ser a tela principal do site, atende à funcionalidade pedid
 
 Nessa tela, pode-se observar o processo de lembrete de um evento que está se aproximando. Ela aparece após o usuário inscrever-se ou favoritar um evento, na tela de visualização de evento. O evento, na homepage, fica em destaque, para indicar sua maior relevância, e uma notificação aparece no site, lembrando que a data do evento está se aproximando.
 
-3. *Tela de visualização de um evento*
+#### 3. *Tela de visualização de um evento*
 
 <div align="center">
     <sub>Figura 06: Wireframe 03</sub>
