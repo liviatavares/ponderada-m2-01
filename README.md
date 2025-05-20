@@ -93,4 +93,42 @@ npm init -y
 npm install express ejs
 ```
 
----
+### Como configurar o banco de dados?
+
+O banco de dados integrado a essa aplicação em específico está presente no Supabase, porém oculto pelo arquivo .gitignore por segurança. 
+
+Para criar um novo banco de dados e conectá-lo ao projeto, basta seguir os seguintes passos:
+
+#### 1. Inicializando o supabase 
+
+Crie uma conta no [site do supabase](https://supabase.com) e crie um projeto individual. Quando for criar seu projeto, guarde a senha do teu projeto - ela será extremamente essencial para a conexão do banco.
+
+#### 2. Criando o banco
+
+Coloque no SQL Editor do seu projeto individual o código contido em `/scripts/init.sql` e dê ctrl + enter para inicializá-lo e criar as tabelas na sua máquina.
+
+#### Conectando o banco ao projeto
+
+Crie um arquivo .env no VS Code e coloque neles os seguintes parâmetros:
+
+```
+DB_HOST=
+DB_PORT=
+DB_USER=
+DB_PASSWORD=
+DB_DATABASE=
+```
+Coloque, nesses espaços, as informações contidas no seu Supabase após clicar em Connect > Connection String > Session Pooler > View parameters. No DB_PASSWORD, coloque a senha do seu banco.
+
+#### Encerrando a conexão
+
+Após conectar ao supabase, no terminal da sua IDE, digite:
+
+```
+npm run init-db
+```
+Para estabelecer a conexão.
+
+### Como testar as APIs (GET, PUT, POST, DELETE)
+
+Após fazer o passo a passo para conectar o banco de dados acima, 
