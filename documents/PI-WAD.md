@@ -305,21 +305,118 @@ Essa tela se relaciona com a usabilidade geral do usuário no website.
 
 ### 3.4. Guia de estilos
 
-*Descreva aqui orientações gerais para o leitor sobre como utilizar os componentes do guia de estilos de sua solução.*
+#### O que é um guia de estilos?
+
+Um guia de estilos é um documento que define padrões visuais e de comunicação para um site ou marca. Ele especifica elementos como tipografia, cores principais e secundárias, uso de logotipos e estilo de botões, formulários e ícones. O guia de estilos garante consistência visual e eficiência no desenvolvimento, pois ajuda a seguir as mesmas diretrizes. Isso facilita a manutenção do site, acelera a criação de novas páginas e melhora a experiência do usuário, já que tudo fica coeso e profissional.
+
+#### Guia de estilos do projeto
+
+Essas são as páginas do guia de estilos desenvolvido para o EventCalendar.
+
+<div align="center">
+    <sub>Figura 07: Guia de estilos </sub>
+    <br>
+    <img src="/assets/guia_1.png" width="80%">
+    <br>
+    <sup>Fonte: Material produzido pela autora (2025)</sup>
+    <br>
+    <br>
+</div>
+
+<div align="center">
+    <sub>Figura 08: Sumário </sub>
+    <br>
+    <img src="/assets/guia_2.png" width="80%">
+    <br>
+    <sup>Fonte: Material produzido pela autora (2025)</sup>
+    <br>
+    <br>
+</div>
+
+<div align="center">
+    <sub>Figura 09: Overview </sub>
+    <br>
+    <img src="/assets/guia_3.png" width="80%">
+    <br>
+    <sup>Fonte: Material produzido pela autora (2025)</sup>
+    <br>
+    <br>
+</div>
+
+<div align="center">
+    <sub>Figura 10: Tipografia (1) </sub>
+    <br>
+    <img src="/assets/guia_4.png" width="80%">
+    <br>
+    <sup>Fonte: Material produzido pela autora (2025)</sup>
+    <br>
+    <br>
+</div>
+
+<div align="center">
+    <sub>Figura 11: Tipografia (2) </sub>
+    <br>
+    <img src="/assets/guia_5.png" width="80%">
+    <br>
+    <sup>Fonte: Material produzido pela autora (2025)</sup>
+    <br>
+    <br>
+</div>
+
+<div align="center">
+    <sub>Figura 12: Paleta de cores </sub>
+    <br>
+    <img src="/assets/guia_6.png" width="80%">
+    <br>
+    <sup>Fonte: Material produzido pela autora (2025)</sup>
+    <br>
+    <br>
+</div>
+
+<div align="center">
+    <sub>Figura 13: Botões </sub>
+    <br>
+    <img src="/assets/guia_7.png" width="80%">
+    <br>
+    <sup>Fonte: Material produzido pela autora (2025)</sup>
+    <br>
+    <br>
+</div>
+
+<div align="center">
+    <sub>Figura 14: Layout Geral </sub>
+    <br>
+    <img src="/assets/guia_8.png" width="80%">
+    <br>
+    <sup>Fonte: Material produzido pela autora (2025)</sup>
+    <br>
+    <br>
+</div>
+
+<div align="center">
+    <sub>Figura 15: Uso da logo </sub>
+    <br>
+    <img src="/assets/guia_9.png" width="80%">
+    <br>
+    <sup>Fonte: Material produzido pela autora (2025)</sup>
+    <br>
+    <br>
+</div>
+
+[Clique aqui](https://www.canva.com/design/DAGoBYBX1SQ/Ef2gMc6JqNgwMdkON2iWFg/edit?utm_content=DAGoBYBX1SQ&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton) para acessar o canva com o guia de estilos mais detalhadamente.
+
 
 #### 3.4.1. Cores
 
-*Apresente aqui a paleta de cores, com seus códigos de aplicação e suas respectivas funções.*
+Como foi possível observar no guia de estilos, as cores principais são azul (#1667A9), amarelo (#F8C531), cinza-claro (#F2F2F2) e cinza-escuro (#252626). Algumas dessas cores também compõem a logo.
 
 #### 3.4.2. Tipografia
 
-*Apresente aqui a tipografia da solução, com famílias de fontes e suas respectivas funções.*
+Como foi possível observar no guia de estilos, as fontes principais são League Spartan e Montserrat. A primeira é mais usada para títulos e outros textos em destaque. A Montserrat, podendo ser usada tanto na versão normal quanto em negrito, é incorporada aos demais textos do site.
 
 #### 3.4.3. Iconografia e imagens 
 
-*(esta subseção é opcional, caso não existam ícones e imagens, apague esta subseção)*
-
-*Posicione aqui imagens e textos contendo exemplos padronizados de ícones e imagens, com seus respectivos atributos de aplicação, utilizadas na solução.*
+Como foi possível ver no guia de estilos, os ícones utilizados são principalmente botões. Na figura 13, podem-se observar ícones que seguem a paleta de cores principal, e representam, respectivamente (observando o lado direito da imagem; de cima para baixo; da esquerda para a direita), o ícone de notificações; o mesmo ícone mas com uma notificação não lida, o ícone que direciona para o perfil do usuário, o botão de configurações, um botão de estrela que significa "adicionar como favorito" e uma caixa de marcação, a ser usada na área de filtros, marcada com um *checkmark*.
 
 ### 3.5. Protótipo de alta fidelidade
 
