@@ -31,6 +31,7 @@ ponderada-m2-01/
 ├── package.json    # Gerenciador de dependências do Node.js
 ├── package-lock.json    # Gerenciador de dependências do Node.js
 ├── .gitattributes
+├── .gitignore
 ├── banco_dados.sql
 ├── jest.config.js    # Arquivo de configuração do Jest
 ├── rest.http    # Teste de endpoints

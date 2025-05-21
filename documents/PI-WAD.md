@@ -420,7 +420,46 @@ Como foi possível ver no guia de estilos, os ícones utilizados são principalm
 
 ### 3.5. Protótipo de alta fidelidade
 
-*Posicione aqui algumas imagens demonstrativas de seu protótipo de alta fidelidade e o link para acesso ao protótipo completo (mantenha o link sempre público para visualização).*
+#### 3.5.1 O que é um protótipo de alta fidelidade?
+
+Um protótipo de alta fidelidade é uma simulação visual detalhada de um site ou aplicativo que se assemelha muito ao produto final. Ele inclui layouts realistas, tipografia e cores definidas e imagens e ícones finais ou próximos dos finais. Ele ajuda no desenvolvimento de um website de plataforma de eventos pois traz uma visualização clara do site antes da codificação, além de oferecer uma base para desenvolvimento, servindo como referência direta para a implementação do site, acelerando o processo e garantindo fidelidade ao design.
+
+#### O protótipo do projeto
+
+Aqui, encontram-se algumas imagens do protótipo de alta fidelidade desenvolvido usando o Figma com base nos wireframes. As alterações feitas desde o wireframe foram apenas melhorias, com nenhuma alteração nos elementos visuais, apenas nos filtros, que agora se encontram com uma barra de seleção para o tipo de filtro ou barra para ajuste de localização. Essas alterações visam cumprir ainda mais com a US03.
+
+<div align="center">
+    <sub>Figura 16: página inicial </sub>
+    <br>
+    <img src="/assets/mockup_1.png" width="80%">
+    <br>
+    <sup>Fonte: Material produzido pela autora (2025)</sup>
+    <br>
+    <br>
+</div>
+
+<div align="center">
+    <sub>Figura 17: página de eventos </sub>
+    <br>
+    <img src="/assets/mockup_2.png" width="80%">
+    <br>
+    <sup>Fonte: Material produzido pela autora (2025)</sup>
+    <br>
+    <br>
+</div>
+
+<div align="center">
+    <sub>Figura 18: página inicial com notificação </sub>
+    <br>
+    <img src="/assets/mockup_3.png" width="80%">
+    <br>
+    <sup>Fonte: Material produzido pela autora (2025)</sup>
+    <br>
+    <br>
+</div>
+
+[Clique aqui](https://www.figma.com/design/j7xBOORsDUbtFjDBXRXs43/prototipo?node-id=20-36&t=7PaeUd4BrP8VEseA-1) para acessar o protótipo diretamente no figma. Lá, podem-se observar, também, os wireframes para comparação e algumas anotações sobre usabilidade.
+
 
 ### 3.6. WebAPI e endpoints
 
