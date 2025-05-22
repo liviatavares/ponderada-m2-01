@@ -132,4 +132,13 @@ Para estabelecer a conexão.
 
 ### Como testar as APIs (GET, PUT, POST, DELETE)
 
-Após fazer o passo a passo para conectar o banco de dados acima, 
+Após fazer o passo a passo para conectar o banco de dados acima, pode inserir no terminal `node server.js`. O servidor rodará na porta 3000, em `http://localhost:3000/api/eventos`.
+
+Usando uma plataforma para testar APIs como o Postman, conecte-o com o banco de dados e teste as seguintes requisições:
+
+1. Criar um evento (`POST /api/eventos`)
+2. Listar todos os eventos (`GET /api/eventos`)
+3. Editar um evento (`PUT /api/eventos/:id`)
+4. Excluir um evento (`DELETE /api/eventos/:id`)
+
+Coloque em "id" o id do evento que você deseja editar ou excluir.
