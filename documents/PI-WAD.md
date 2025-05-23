@@ -45,7 +45,7 @@ Sua interface será objetiva e visualmente agradável, e terá como missão faci
 ### 2.1. Personas
 
 <div align="center">
-<sub>Figura 01 - Persona 01 - Julia Rodrigues</sub>
+<sub>Figura 00 - Persona 01 - Julia Rodrigues</sub>
 <br>
 <br>
 <p align="center">
@@ -106,12 +106,12 @@ Critério de aceite 2 | CR2: O usuário poderá também selecionar manualmente s
 
 ### 3.1. Modelagem do banco de dados
 
-#### Diagrama físico e lógico do banco de dados
+#### 3.1.1 Diagrama físico e lógico do banco de dados
 
 O diagrama a seguir foi realizado com o dbdiagram.io. Nele, podem-se observar todas as tabelas criadas.
 
 <div align="center">
-    <sub>Figura 02: Diagrama de tabelas do banco de dados</sub>
+    <sub>Figura 01: Diagrama de tabelas do banco de dados</sub>
     <br>
     <img src="/assets/modelo_banco.png" width="80%">
     <br>
@@ -123,7 +123,7 @@ O diagrama a seguir foi realizado com o dbdiagram.io. Nele, podem-se observar to
 Nessa imagem, mostra-se o schema produzido pelo Supabase.
 
 <div align="center">
-    <sub>Figura 03: Schema</sub>
+    <sub>Figura 02: Schema</sub>
     <br>
     <img src="/assets/schema.png" width="80%">
     <br>
@@ -132,11 +132,11 @@ Nessa imagem, mostra-se o schema produzido pelo Supabase.
     <br>
 </div>
 
-#### Código SQL
+#### 3.1.2 Código SQL
 
 O código SQL utilizado para desenvolver as tabelas foi o seguinte:
 
-``` 
+``` sql
 -- tabela de usuários: contém o nome, id, email, localização e aniversário do usuário.
 -- essas informações são todas extremamente necessárias. por exemplo, a localização ajuda a filtrar
 -- os shows mais perto, e a idade ajuda a não recomendar shows +18 para usuários menores de idade
@@ -191,7 +191,7 @@ CREATE TABLE favoritos (
 
 Para redigi-lo, foi utilizado o Supabase. Seu arquivo SQL pode ser encontrado em `scripts/db.sql`.
 
-### Descrição de tabelas
+### 3.1.3 Descrição de tabelas
 
 #### 1. *Tabela eventos*
 
@@ -217,19 +217,114 @@ A tabela favoritos tem como atributos user_id (um inteiro de até 4 dígitos), q
 
 A tabela categoria eventos tem como atributos evento_id (um inteiro de até 4 dígitos), que se relaciona com o id do evento, e é uma *chave primária*, além da categoria_id que se relaciona com o id das categorias, que é outra *chave primária*. A chave primária composta significa que um mesmo evento só pode ter uma categoria.
 
-### 3.1.1 BD e Models
-*Descreva aqui os Models implementados no sistema web*
+### 3.2 BD, Models e Arquitetura
 
-### 3.2. Arquitetura
+No projeto, criei dois Models para os eventos e para os usuários. Neles, são armazenadas as informações sobre os usuários e sobre os eventos, que posteriormente serão passadas para o controller e para os views.
 
-*Posicione aqui o diagrama de arquitetura da sua solução de aplicação web. Atualize sempre que necessário.*
+#### 3.2.1. **eventoModel.js**
 
-**Instruções para criação do diagrama de arquitetura**  
-- **Model**: A camada que lida com a lógica de negócios e interage com o banco de dados.
-- **View**: A camada responsável pela interface de usuário.
-- **Controller**: A camada que recebe as requisições, processa as ações e atualiza o modelo e a visualização.
-  
-*Adicione as setas e explicações sobre como os dados fluem entre o Model, Controller e View.*
+``` javascript
+const db = require('../config/database'); // Importa a conexão com o banco de dados
+
+module.exports = {
+  // Busca todos os eventos, ordenando pelo nome do evento
+  async findAll() {
+    const result = await db.query('SELECT * FROM eventos ORDER BY nome_evento ASC');
+    return result.rows; // Retorna todos os eventos encontrados
+  },
+
+  // Cria um novo evento com os dados fornecidos
+  async create(nome_evento, tipo, localizacao_evento, data_evento, duracao) {
+    const query = `
+      INSERT INTO eventos (nome_evento, tipo, localizacao_evento, data_evento, duracao)
+      VALUES ($1, $2, $3, $4, $5) RETURNING *`;
+    const result = await db.query(query, [nome_evento, tipo, localizacao_evento, data_evento, duracao]);
+    return result.rows[0]; // Retorna o evento criado
+  },
+
+  // Atualiza um evento existente pelo ID com os novos dados fornecidos
+  async update(id, nome_evento, tipo, localizacao_evento, data_evento, duracao) {
+    const query = `
+      UPDATE eventos SET nome_evento = $1, tipo = $2, localizacao_evento = $3, data_evento = $4, duracao = $5
+      WHERE id = $6 RETURNING *`;
+    const result = await db.query(query, [nome_evento, tipo, localizacao_evento, data_evento, duracao, id]);
+    return result.rows[0]; // Retorna o evento atualizado
+  },
+
+  // Exclui um evento pelo ID
+  async delete(id) {
+    await db.query('DELETE FROM eventos WHERE id = $1', [id]);
+    // Não retorna nada, apenas executa a exclusão
+  }
+};
+```
+
+#### 3.2.2. **userModel.js** 
+
+``` javascript
+const db = require('../config/db'); // Importa a conexão com o banco de dados
+
+// Define a classe User para manipulação dos usuários no banco
+class User {
+  // Busca todos os usuários
+  static async getAll() {
+    const result = await db.query('SELECT * FROM users');
+    return result.rows;
+  }
+
+  // Busca um usuário pelo ID
+  static async getById(id) {
+    const result = await db.query('SELECT * FROM users WHERE id = $1', [id]);
+    return result.rows[0];
+  }
+
+  // Cria um novo usuário com os dados fornecidos
+  static async create(data) {
+    const result = await db.query(
+      'INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *',
+      [data.name, data.email]
+    );
+    return result.rows[0];
+  }
+
+  // Atualiza um usuário existente pelo ID
+  static async update(id, data) {
+    const result = await db.query(
+      'UPDATE users SET name = $1, email = $2 WHERE id = $3 RETURNING *',
+      [data.name, data.email, id]
+    );
+    return result.rows[0];
+  }
+
+  // Exclui um usuário pelo ID
+  static async delete(id) {
+    const result = await db.query('DELETE FROM users WHERE id = $1 RETURNING *', [id]);
+    return result.rowCount > 0; // Retorna true se algum usuário foi deletado
+  }
+}
+
+module.exports = User; // Exporta a classe User para uso em outros arquivos
+```
+
+#### 3.2.3 Arquitetura
+
+#### 3.2.3.1 O que é Arquitetura MVC?
+
+Um diagrama de arquitetura ajuda na construção e visualização de um banco de dados indiretamente, ao organizar a forma como a aplicação interage com os dados. Ele contribui com clareza na separação de responsabilidades, ajuda a identificar claramente quais classes precisam acessar o banco, e quais dados são importantes.
+
+#### 3.2.3.2 A arquitetura do projeto
+
+Nessa imagem, pode-se observar a arquitetura realizada para o EventCalendar, mostrando todas as relações do framework model, view e controller.
+
+<div align="center">
+    <sub>Figura 03: Arquitetura MVC</sub>
+    <br>
+    <img src="/assets/arquitetura.png" width="80%">
+    <br>
+    <sup>Fonte: Material produzido pela autora (2025)</sup>
+    <br>
+    <br>
+</div>
 
 ### 3.3. Wireframes
 

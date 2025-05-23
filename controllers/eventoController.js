@@ -1,67 +1,47 @@
-// controllers/eventoController.js
-const pool = require('../config/database');
+const EventoModel = require('../models/eventoModel');
 
-// Criar uma nova tarefa
+// Criar um novo evento
 exports.criarEvento = async (req, res) => {
   const { nome_evento, tipo, localizacao_evento, data_evento, duracao } = req.body;
-
-  const query = `
-    INSERT INTO eventos (nome_evento, tipo, localizacao_evento, data_evento, duracao)
-    VALUES ($1, $2, $3, $4, $5) RETURNING *`;
-  const values = [nome_evento, tipo, localizacao_evento, data_evento, duracao];
-
   try {
-    const result = await pool.query(query, values);
-    const evento = result.rows[0];
+    const evento = await EventoModel.create(nome_evento, tipo, localizacao_evento, data_evento, duracao);
     res.status(201).json(evento);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-// Listar todas as Eventos
+// Listar todos os eventos
 exports.listarEventos = async (req, res) => {
-  const query = 'SELECT * FROM eventos';
-
   try {
-    const result = await pool.query(query);
-    res.status(200).json(result.rows);
+    const eventos = await EventoModel.findAll();
+    res.status(200).json(eventos);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-// Editar uma Evento
+// Editar um evento
 exports.editarEvento = async (req, res) => {
   const { id } = req.params;
   const { nome_evento, tipo, localizacao_evento, data_evento, duracao } = req.body;
-
-  const query = `
-    UPDATE eventos SET nome_evento = $1, tipo = $2, localizacao_evento = $3, data_evento = $4, duracao = $5
-    WHERE id = $6 RETURNING *`;
-  const values = [nome_evento, tipo, localizacao_evento, data_evento, duracao, id];
-
   try {
-    const result = await pool.query(query, values);
-    if (result.rows.length === 0) {
+    const evento = await EventoModel.update(id, nome_evento, tipo, localizacao_evento, data_evento, duracao);
+    if (!evento) {
       return res.status(404).json({ message: 'Evento não encontrado' });
     }
-    res.status(200).json(result.rows[0]);
+    res.status(200).json(evento);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-// Excluir uma Evento
+// Excluir um evento
 exports.excluirEvento = async (req, res) => {
   const { id } = req.params;
-
-  const query = 'DELETE FROM eventos WHERE id = $1 RETURNING *';
-  const values = [id];
-
   try {
-    const result = await pool.query(query, values);
-    if (result.rows.length === 0) {
+    const evento = await EventoModel.delete(id);
+    if (!evento) {
       return res.status(404).json({ message: 'Evento não encontrado' });
     }
     res.status(200).json({ message: 'Evento excluído com sucesso' });
