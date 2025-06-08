@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erro - Event Calendar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'event-blue': '#2563eb',
+                        'event-yellow': '#fbbf24',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-event-yellow opacity-10 rounded-full"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-event-blue opacity-10 rounded-full"></div>
+    </div>
+
+    <div class="relative w-full max-w-md">
+        <!-- Logo Section -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center space-x-3 mb-4">
+                <div class="w-16 h-16 bg-event-blue rounded-xl flex items-center justify-center shadow-lg">
+                    <i class="fas fa-calendar-alt text-white text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold text-event-blue leading-none">Event</h1>
+                    <h2 class="text-3xl font-bold text-event-yellow leading-none">Calendar</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Card -->
+        <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+            <!-- Card Header -->
+            <div class="bg-gradient-to-r from-red-500 to-red-600 px-8 py-6">
+                <h3 class="text-xl font-bold text-white text-center">Erro</h3>
+            </div>
+
+            <!-- Card Body -->
+            <div class="p-8 text-center">
+                <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-exclamation-triangle text-red-500 text-3xl"></i>
+                </div>
+                
+                <p class="text-gray-800 text-lg mb-4"><%= message %></p>
+                
+                <% if (error) { %>
+                    <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                        <p class="text-gray-500 text-sm">Detalhes técnicos:</p>
+                        <p class="text-gray-600 text-sm font-mono"><%= error.message %></p>
+                    </div>
+                <% } %>
+
+                <div class="flex flex-col sm:flex-row justify-center gap-4 mt-6">
+                    <a href="/" class="bg-event-blue hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors inline-flex items-center justify-center">
+                        <i class="fas fa-home mr-2"></i>
+                        Voltar para Home
+                    </a>
+                    <a href="javascript:history.back()" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-medium transition-colors inline-flex items-center justify-center">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Voltar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bg-white {
+            animation: fadeIn 0.6s ease-out;
+        }
+    </style>
+</body>
+</html>

@@ -115,6 +115,10 @@ O diagrama a seguir foi realizado com o dbdiagram.io. Nele, podem-se observar to
     <br>
     <img src="/assets/modelo_banco.png" width="80%">
     <br>
+    <sub> Como foi preciso atualizar algumas informações do banco de dados, a imagem acima não está devidamente atualizada, pois contém as tabelas "categoria_evento", "categorias" e não contém algumas colunas adicionadas posteriormente. A imagem abaixo mostra o diagrama atualizado. </sub>
+    <br>
+    <img src="/assets/diagrama.png" width="80%">
+    <br>
     <sup>Fonte: Material produzido pela autora (2025)</sup>
     <br>
     <br>
@@ -127,10 +131,15 @@ Nessa imagem, mostra-se o schema produzido pelo Supabase.
     <br>
     <img src="/assets/schema.png" width="80%">
     <br>
+    <sub> Como foi preciso atualizar algumas informações do banco de dados, a imagem acima não está devidamente atualizada, pois contém as tabelas "categoria_evento", "categorias" e não contém algumas colunas adicionadas posteriormente. A imagem abaixo mostra o schema atualizado. </sub>
+    <br>
+    <img src="/assets/schema2.png" width="80%">
+    <br>
     <sup>Fonte: Material produzido pela autora (2025)</sup>
     <br>
     <br>
 </div>
+
 
 #### 3.1.2 Código SQL
 
@@ -140,27 +149,30 @@ O código SQL utilizado para desenvolver as tabelas foi o seguinte:
 -- tabela de usuários: contém o nome, id, email, localização e aniversário do usuário.
 -- essas informações são todas extremamente necessárias. por exemplo, a localização ajuda a filtrar
 -- os shows mais perto, e a idade ajuda a não recomendar shows +18 para usuários menores de idade
-CREATE TABLE usuarios (
+CREATE TABLE usuarios IF NOT EXISTS (
   id SERIAL PRIMARY KEY,
   nome_usuario TEXT NOT NULL,
   email TEXT NOT NULL,
   localizacao TEXT NOT NULL,
-  data_nascimento DATE
+  data_nascimento DATE,
+  senha TEXT
 );
 
 -- os eventos contém id, nome, tipo (show de música, show de humor, peça de teatro...), localização, data e duração (em horas)
-CREATE TABLE eventos (
+CREATE TABLE eventos IF NOT EXISTS (
   id SERIAL PRIMARY KEY,
   nome_evento TEXT NOT NULL,
   tipo TEXT NOT NULL,
   localizacao_evento TEXT NOT NULL,
   data_evento DATE,
-  duracao TIMESTAMP
+  duracao TIME,
+  classificacao_indicativa TEXT,
+  acessibilidade TEXT
 );
 
 -- a inscrição contém id da inscrição, id do usuário e do evento, data da inscrição e status.
 -- status pode ser, por exemplo, 'confirmado', 'pendente' ou 'cancelado'.
-CREATE TABLE inscricao (
+CREATE TABLE inscricao IF NOT EXISTS (
     id SERIAL PRIMARY KEY,
     user_id INT REFERENCES usuarios(id) on DELETE CASCADE,
     evento_id INT REFERENCES eventos(id) on DELETE CASCADE,
@@ -168,142 +180,403 @@ CREATE TABLE inscricao (
     status VARCHAR(50) 
 );
 
--- aqui, podem-se filtrar os eventos por tipo, área, etc
-CREATE TABLE categorias (
-    id SERIAL PRIMARY KEY,
-    nome_categoria TEXT
-);
-
--- essa tabela relaciona a categoria com o evento
-CREATE TABLE categoria_evento (
-    evento_id INT REFERENCES eventos(id),
-    categoria_id INT REFERENCES categorias(id),
-    PRIMARY KEY (evento_id, categoria_id)
-);
-
 -- aqui, o usuário pode marcar um evento como favorito, relacionando os usuários com os eventos
-CREATE TABLE favoritos (
+CREATE TABLE favoritos IF NOT EXISTS (
     user_id INT REFERENCES usuarios(id),
     evento_id INT REFERENCES eventos(id),
     PRIMARY KEY (user_id, evento_id)
 );
 ```
 
-Para redigi-lo, foi utilizado o Supabase. Seu arquivo SQL pode ser encontrado em `scripts/db.sql`.
+Para redigi-lo, foi utilizado o Supabase. Seu arquivo SQL pode ser encontrado em `scripts/db.sql`. Esse código foi atualizado em 08/06/2025.
 
 ### 3.1.3 Descrição de tabelas
 
 #### 1. *Tabela eventos*
 
-A tabela eventos tem como atributos id (um inteiro de até 4 dígitos), que é a *chave primária*, nome (texto), tipo (texto), localizacao_evento (texto), data_evento (data) e duracao (time). 
+A tabela eventos tem como atributos id (um inteiro de até 4 dígitos), que é a *chave primária*, nome (texto), tipo (texto), localizacao_evento (texto), data_evento (data), acessibilidade (texto), classificacao_indicativa (texto) e duracao (time). 
 
 #### 2. *Tabela usuários*
 
-A tabela usuários tem como atributos id (um inteiro de até 4 dígitos), que é a *chave primária*, nome (texto), email (texto), localizacao (texto) e data_nascimento (date).
+A tabela usuários tem como atributos id (um inteiro de até 4 dígitos), que é a *chave primária*, nome (texto), email (texto), senha (texto), localizacao (texto) e data_nascimento (date).
 
 #### 3. *Tabela inscrição*
 
 A Tabela inscrição tem como atributos id (um inteiro de até 4 dígitos), que é a *chave primária*, user_id (que se relaciona com o id do usuário), evento_id (que se relaciona com o id do evento), data_inscricao (timestamp) e status (varchar(50) - ou seja, um texto com até 50 caracteres).
 
-#### 4. *Tabela categorias* 
-
-A tabela categorias tem como atributos id (um inteiro de até 4 dígitos), que é a *chave primária*, e um nome (texto).
-
 #### 5. *Tabela favoritos*
 
 A tabela favoritos tem como atributos user_id (um inteiro de até 4 dígitos), que se relaciona com o id do usuário e é a *chave primária*, e evento_id (um inteiro de até 4 dígitos), que se relaciona com o id do evento, e é outra *chave primária*.  A chave primária composta significa que um mesmo usuário só pode favoritar o mesmo evento uma vez.
 
-#### 6. *Tabela categoria eventos*
-
-A tabela categoria eventos tem como atributos evento_id (um inteiro de até 4 dígitos), que se relaciona com o id do evento, e é uma *chave primária*, além da categoria_id que se relaciona com o id das categorias, que é outra *chave primária*. A chave primária composta significa que um mesmo evento só pode ter uma categoria.
-
 ### 3.2 BD, Models e Arquitetura
 
-No projeto, criei dois Models para os eventos e para os usuários. Neles, são armazenadas as informações sobre os usuários e sobre os eventos, que posteriormente serão passadas para o controller e para os views.
+No projeto, criei Models para os eventos, para os usuários, para os favoritos e para as inscrições. Neles, são armazenadas as informações sobre os usuários e sobre os eventos, que posteriormente serão passadas para o controller e para os views. Segue o código do eventoModel.js, para demonstração da estrutura do model.
 
 #### 3.2.1. **eventoModel.js**
 
 ``` javascript
-const db = require('../config/database'); // Importa a conexão com o banco de dados
+const pool = require("../config/database") // Importa o objeto 'pool' do arquivo de configuração do banco de dados, que gerencia as conexões com o PostgreSQL.
 
-module.exports = {
-  // Busca todos os eventos, ordenando pelo nome do evento
+// Define o objeto EventoModel que conterá todas as funções para interagir com a tabela 'eventos'.
+const EventoModel = {
+  // Função assíncrona para buscar todos os eventos no banco de dados.
   async findAll() {
-    const result = await db.query('SELECT * FROM eventos ORDER BY nome_evento ASC');
-    return result.rows; // Retorna todos os eventos encontrados
+    try {
+      // Executa uma query SQL para selecionar todos os registros da tabela 'eventos', ordenando-os pela data do evento.
+      const result = await pool.query("SELECT * FROM eventos ORDER BY data_evento ASC")
+      return result.rows
+    } catch (error) {
+      // Em caso de erro durante a execução da query, exibe uma mensagem de erro no console.
+      console.error("Erro ao buscar eventos:", error)
+      // Lança o erro novamente para que ele possa ser tratado em níveis superiores.
+      throw error
+    }
   },
 
-  // Cria um novo evento com os dados fornecidos
-  async create(nome_evento, tipo, localizacao_evento, data_evento, duracao) {
-    const query = `
-      INSERT INTO eventos (nome_evento, tipo, localizacao_evento, data_evento, duracao)
-      VALUES ($1, $2, $3, $4, $5) RETURNING *`;
-    const result = await db.query(query, [nome_evento, tipo, localizacao_evento, data_evento, duracao]);
-    return result.rows[0]; // Retorna o evento criado
+  // Função assíncrona para buscar um evento específico pelo seu ID.
+  async findById(id) {
+    try {
+      // Executa uma query SQL para selecionar um evento onde o 'id' corresponde ao valor fornecido.
+      const result = await pool.query("SELECT * FROM eventos WHERE id = $1", [id])
+      // Retorna a primeira linha do resultado (o evento encontrado), ou 'undefined' se nenhum for encontrado.
+      return result.rows[0]
+    } catch (error) {
+      // Em caso de erro, exibe uma mensagem de erro no console.
+      console.error("Erro ao buscar evento por ID:", error)
+      // Lança o erro.
+      throw error
+    }
   },
 
-  // Atualiza um evento existente pelo ID com os novos dados fornecidos
-  async update(id, nome_evento, tipo, localizacao_evento, data_evento, duracao) {
-    const query = `
-      UPDATE eventos SET nome_evento = $1, tipo = $2, localizacao_evento = $3, data_evento = $4, duracao = $5
-      WHERE id = $6 RETURNING *`;
-    const result = await db.query(query, [nome_evento, tipo, localizacao_evento, data_evento, duracao, id]);
-    return result.rows[0]; // Retorna o evento atualizado
+  // Função assíncrona para buscar eventos com base em filtros dinâmicos.
+  async findByFilters(filters) {
+    try {
+      // Inicia a query SQL base. 
+      let query = "SELECT * FROM eventos WHERE 1=1"
+      // Array para armazenar os valores dos parâmetros da query.
+      const params = []
+      // Contador para os placeholders de parâmetros ($1, $2, etc.).
+      let paramCount = 1
+
+      // Verifica se o filtro 'tipo' foi fornecido.
+      if (filters.tipo) {
+        // Adiciona a condição 'tipo' à query.
+        query += ` AND tipo = $${paramCount}`
+        // Adiciona o valor do tipo ao array de parâmetros.
+        params.push(filters.tipo)
+        // Incrementa o contador de parâmetros.
+        paramCount++
+      }
+
+      // Verifica se o filtro 'data_evento' foi fornecido.
+      if (filters.data_evento) {
+        // Adiciona a condição para comparar apenas a data (ignorando a hora) do evento.
+        query += ` AND DATE(data_evento) = $${paramCount}`
+        // Adiciona o valor da data ao array de parâmetros.
+        params.push(filters.data_evento)
+        // Incrementa o contador.
+        paramCount++
+      }
+
+      // Verifica se o filtro 'localizacao_evento' foi fornecido.
+      if (filters.localizacao_evento) {
+        // Adiciona a condição para buscar localização que contenha parcialmente o texto (case-insensitive - ILIKE).
+        query += ` AND localizacao_evento ILIKE $${paramCount}`
+        // Adiciona o valor da localização (com wildcards %) ao array de parâmetros.
+        params.push(`%${filters.localizacao_evento}%`)
+        // Incrementa o contador.
+        paramCount++
+      }
+
+      // Verifica se o filtro 'classificacao_indicativa' foi fornecido.
+      if (filters.classificacao_indicativa) {
+        const classificacao_indicativa = filters.classificacao_indicativa
+
+        // Lógica para incluir classificações menores ou iguais à selecionada.
+        if (classificacao_indicativa === "L") {
+          query += ` AND classificacao_indicativa = $${paramCount}`
+          params.push("L")
+          paramCount++
+        } else if (classificacao_indicativa === "+10") {
+          query += ` AND classificacao_indicativa = ANY($${paramCount})`
+          params.push(["L", "+10"])
+          paramCount++
+        } else if (classificacao_indicativa === "+14") {
+          query += ` AND classificacao_indicativa = ANY($${paramCount})`
+          params.push(["L", "+10", "+14"])
+          paramCount++
+        } else if (classificacao_indicativa === "+16") {
+          query += ` AND classificacao_indicativa = ANY($${paramCount})`
+          params.push(["L", "+10", "+14", "+16"])
+          paramCount++
+        } else if (classificacao_indicativa === "+18") {
+          query += ` AND classificacao_indicativa = ANY($${paramCount})`
+          params.push(["L", "+10", "+14", "+16", "+18"])
+          paramCount++
+        }
+      }
+
+      // Verifica se o filtro 'acessibilidade' foi fornecido.
+      if (filters.acessibilidade) {
+        // Adiciona a condição de acessibilidade.
+        query += ` AND acessibilidade = $${paramCount}`
+        // Adiciona o valor da acessibilidade ao array de parâmetros.
+        params.push(filters.acessibilidade)
+        // Incrementa o contador.
+        paramCount++
+      }
+
+      // Adiciona a ordenação final à query.
+      query += " ORDER BY data_evento ASC"
+
+      // Executa a query com os parâmetros construídos dinamicamente.
+      const result = await pool.query(query, params)
+      // Retorna os eventos filtrados.
+      return result.rows
+    } catch (error) {
+      // Em caso de erro, exibe uma mensagem de erro e lança o erro.
+      console.error("Erro ao buscar eventos com filtros:", error)
+      throw error
+    }
   },
 
-  // Exclui um evento pelo ID
+  // Função assíncrona para buscar as inscrições de um usuário.
+  async findUserSubscriptions(userId) {
+    try {
+      // Define a query SQL para buscar eventos nos quais um usuário está inscrito.
+      // Realiza um JOIN entre 'eventos' e 'inscricao' e filtra pelo ID do usuário.
+      const query = `
+                SELECT e.*, i.status, i.data_inscricao
+                FROM eventos e 
+                INNER JOIN inscricao i ON e.id = i.evento_id 
+                WHERE i.user_id = $1 
+                ORDER BY e.data_evento ASC
+            `
+      // Executa a query com o ID do usuário como parâmetro.
+      const result = await pool.query(query, [userId])
+      // Retorna os eventos inscritos pelo usuário.
+      return result.rows
+    } catch (error) {
+      // Em caso de erro (ex: tabelas não existirem), exibe uma mensagem.
+      console.error("Erro ao buscar inscrições do usuário:", error)
+      // Retorna um array vazio para indicar que não há inscrições ou houve um problema.
+      return []
+    }
+  },
+
+  // Função assíncrona para buscar os eventos favoritos de um usuário.
+  async findUserFavorites(userId) {
+    try {
+      // Define a query SQL para buscar eventos que um usuário marcou como favoritos.
+      // Realiza um JOIN entre 'eventos' e 'favoritos' e filtra pelo ID do usuário.
+      const query = `
+                SELECT e.* FROM eventos e 
+                INNER JOIN favoritos f ON e.id = f.evento_id 
+                WHERE f.user_id = $1 
+                ORDER BY e.data_evento ASC
+            `
+      // Executa a query com o ID do usuário como parâmetro.
+      const result = await pool.query(query, [userId])
+      // Retorna os eventos favoritos do usuário.
+      return result.rows
+    } catch (error) {
+      // Em caso de erro, exibe uma mensagem.
+      console.error("Erro ao buscar favoritos do usuário:", error)
+      // Retorna um array vazio.
+      return []
+    }
+  },
+
+  // Função assíncrona para verificar se um evento é favorito de um usuário.
+  async isFavorite(userId, eventoId) {
+    try {
+      // Query para verificar a existência de um registro na tabela 'favoritos' para o par userId/eventoId.
+      const query = "SELECT 1 FROM favoritos WHERE user_id = $1 AND evento_id = $2"
+      // Executa a query.
+      const result = await pool.query(query, [userId, eventoId])
+      // Retorna true se houver alguma linha (ou seja, é favorito), false caso contrário.
+      return result.rows.length > 0
+    } catch (error) {
+      // Em caso de erro, exibe mensagem e retorna false.
+      console.error("Erro ao verificar favorito:", error)
+      return false
+    }
+  },
+
+  // Função assíncrona para adicionar ou remover um evento dos favoritos de um usuário (toggle).
+  async toggleFavorite(userId, eventoId) {
+    try {
+      // Primeiro, verifica se o evento já é favorito.
+      const isFav = await this.isFavorite(userId, eventoId)
+
+      if (isFav) {
+        // Se já for favorito, remove o registro da tabela 'favoritos'.
+        await pool.query("DELETE FROM favoritos WHERE user_id = $1 AND evento_id = $2", [userId, eventoId])
+        // Retorna um objeto indicando que foi removido.
+        return { isFavorite: false, message: "Removido dos favoritos" }
+      } else {
+        // Se não for favorito, insere um novo registro na tabela 'favoritos'.
+        await pool.query("INSERT INTO favoritos (user_id, evento_id) VALUES ($1, $2)", [userId, eventoId])
+        // Retorna um objeto indicando que foi adicionado.
+        return { isFavorite: true, message: "Adicionado aos favoritos" }
+      }
+    } catch (error) {
+      // Em caso de erro, exibe mensagem e lança o erro.
+      console.error("Erro ao alterar favorito:", error)
+      throw error
+    }
+  },
+
+  // Função assíncrona para verificar se um usuário já está inscrito em um evento.
+  async isSubscribed(userId, eventoId) {
+    try {
+      // Query para verificar a existência de um registro na tabela 'inscricao' para o par userId/eventoId.
+      const query = "SELECT 1 FROM inscricao WHERE user_id = $1 AND evento_id = $2"
+      // Executa a query.
+      const result = await pool.query(query, [userId, eventoId])
+      // Retorna true se houver alguma linha (ou seja, está inscrito), false caso contrário.
+      return result.rows.length > 0
+    } catch (error) {
+      // Em caso de erro, exibe mensagem e retorna false.
+      console.error("Erro ao verificar inscrição:", error)
+      return false
+    }
+  },
+
+  // Função assíncrona para inscrever um usuário em um evento.
+  async subscribe(userId, eventoId) {
+    try {
+      // Primeiro, verifica se o usuário já está inscrito no evento.
+      const isAlreadySubscribed = await this.isSubscribed(userId, eventoId)
+
+      if (isAlreadySubscribed) {
+        // Se já estiver inscrito, retorna uma mensagem informando.
+        return { success: false, message: "Você já está inscrito neste evento" }
+      }
+
+      // Se não estiver inscrito, insere um novo registro na tabela 'inscricao' com status "Confirmado".
+      await pool.query("INSERT INTO inscricao (user_id, evento_id, status) VALUES ($1, $2, $3)", [
+        userId,
+        eventoId,
+        "Confirmado",
+      ])
+
+      // Retorna um objeto indicando sucesso na inscrição.
+      return { success: true, message: "Inscrição realizada com sucesso!" }
+    } catch (error) {
+      // Em caso de erro, exibe mensagem e lança o erro.
+      console.error("Erro ao inscrever usuário:", error)
+      throw error
+    }
+  },
+
+  // Função assíncrona para cancelar a inscrição de um usuário em um evento.
+  async unsubscribe(userId, eventoId) {
+    try {
+      // Deleta o registro da tabela 'inscricao' para o par userId/eventoId.
+      const result = await pool.query("DELETE FROM inscricao WHERE user_id = $1 AND evento_id = $2", [userId, eventoId])
+
+      // Verifica se alguma linha foi afetada (se a inscrição existia e foi deletada).
+      if (result.rowCount > 0) {
+        // Retorna sucesso e mensagem de cancelamento.
+        return { success: true, message: "Inscrição cancelada com sucesso!" }
+      } else {
+        // Se nenhuma linha foi afetada, significa que a inscrição não existia.
+        return { success: false, message: "Você não está inscrito neste evento" }
+      }
+    } catch (error) {
+      // Em caso de erro, exibe mensagem e lança o erro.
+      console.error("Erro ao cancelar inscrição:", error)
+      throw error
+    }
+  },
+
+  // Função assíncrona para criar um novo evento.
+  async create(eventoData) {
+    try {
+      // Define a query SQL para inserir um novo evento na tabela 'eventos'.
+      // 'RETURNING *' faz com que a query retorne o registro recém-criado, incluindo seu ID gerado.
+      const query = `
+        INSERT INTO eventos (nome_evento, tipo, localizacao_evento, data_evento, duracao, classificacao_indicativa, acessibilidade, descricao)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        RETURNING *
+      `
+      // Array com os dados do evento na ordem correta para a query.
+      const params = [
+        eventoData.nome_evento,
+        eventoData.tipo,
+        eventoData.localizacao_evento,
+        eventoData.data_evento,
+        eventoData.duracao,
+        eventoData.classificacao_indicativa,
+        eventoData.acessibilidade,
+        eventoData.descricao,
+      ]
+
+      // Executa a query de inserção.
+      const result = await pool.query(query, params)
+      // Retorna o evento recém-criado.
+      return result.rows[0]
+    } catch (error) {
+      // Em caso de erro, exibe mensagem e lança o erro.
+      console.error("Erro ao criar evento:", error)
+      throw error
+    }
+  },
+
+  // Função assíncrona para atualizar um evento existente.
+  async update(id, eventoData) {
+    try {
+      // Define a query SQL para atualizar os dados de um evento.
+      // O 'WHERE id = $9' garante que apenas o evento com o ID correspondente seja atualizado.
+      // 'RETURNING *' retorna o registro atualizado.
+      const query = `
+        UPDATE eventos 
+        SET nome_evento = $1, tipo = $2, localizacao_evento = $3, data_evento = $4, duracao = $5, classificacao_indicativa = $6, acessibilidade = $7, descricao = $8
+        WHERE id = $9
+        RETURNING *
+      `
+      // Array com os dados atualizados do evento, incluindo o ID no final.
+      const params = [
+        eventoData.nome_evento,
+        eventoData.tipo,
+        eventoData.localizacao_evento,
+        eventoData.data_evento,
+        eventoData.duracao,
+        eventoData.classificacao_indicativa,
+        eventoData.acessibilidade,
+        eventoData.descricao,
+        id, // O ID do evento a ser atualizado.
+      ]
+
+      // Executa a query de atualização.
+      const result = await pool.query(query, params)
+      // Retorna o evento atualizado.
+      return result.rows[0]
+    } catch (error) {
+      // Em caso de erro, exibe mensagem e lança o erro.
+      console.error("Erro ao atualizar evento:", error)
+      throw error
+    }
+  },
+
+  // Função assíncrona para deletar um evento pelo seu ID.
   async delete(id) {
-    await db.query('DELETE FROM eventos WHERE id = $1', [id]);
-    // Não retorna nada, apenas executa a exclusão
-  }
-};
-```
-
-#### 3.2.2. **userModel.js** 
-
-``` javascript
-const db = require('../config/db'); // Importa a conexão com o banco de dados
-
-// Define a classe User para manipulação dos usuários no banco
-class User {
-  // Busca todos os usuários
-  static async getAll() {
-    const result = await db.query('SELECT * FROM users');
-    return result.rows;
-  }
-
-  // Busca um usuário pelo ID
-  static async getById(id) {
-    const result = await db.query('SELECT * FROM users WHERE id = $1', [id]);
-    return result.rows[0];
-  }
-
-  // Cria um novo usuário com os dados fornecidos
-  static async create(data) {
-    const result = await db.query(
-      'INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *',
-      [data.name, data.email]
-    );
-    return result.rows[0];
-  }
-
-  // Atualiza um usuário existente pelo ID
-  static async update(id, data) {
-    const result = await db.query(
-      'UPDATE users SET name = $1, email = $2 WHERE id = $3 RETURNING *',
-      [data.name, data.email, id]
-    );
-    return result.rows[0];
-  }
-
-  // Exclui um usuário pelo ID
-  static async delete(id) {
-    const result = await db.query('DELETE FROM users WHERE id = $1 RETURNING *', [id]);
-    return result.rowCount > 0; // Retorna true se algum usuário foi deletado
-  }
+    try {
+      // Executa a query SQL para deletar um registro da tabela 'eventos' com o ID fornecido.
+      const result = await pool.query("DELETE FROM eventos WHERE id = $1", [id])
+      // Retorna true se alguma linha foi deletada (rowCount > 0), false caso contrário.
+      return result.rowCount > 0
+    } catch (error) {
+      // Em caso de erro, exibe mensagem e lança o erro.
+      console.error("Erro ao deletar evento:", error)
+      throw error
+    }
+  },
 }
 
-module.exports = User; // Exporta a classe User para uso em outros arquivos
+// Exporta o EventoModel para que suas funções possam ser usadas por outras partes da aplicação.
+module.exports = EventoModel
 ```
 
 #### 3.2.3 Arquitetura
@@ -319,7 +592,7 @@ Nessa imagem, pode-se observar a arquitetura realizada para o EventCalendar, mos
 <div align="center">
     <sub>Figura 03: Arquitetura MVC</sub>
     <br>
-    <img src="/assets/arquitetura.png" width="80%">
+    <img src="/assets/arquitetura.png" width="100%">
     <br>
     <sup>Fonte: Material produzido pela autora (2025)</sup>
     <br>
@@ -591,11 +864,258 @@ O protótipo foi desenvolvido pensando na coerência visual e também detalhista
 
 ### 3.6. WebAPI e endpoints
 
-*Utilize um link para outra página de documentação contendo a descrição completa de cada endpoint. Ou descreva aqui cada endpoint criado para seu sistema.*  
+#### 3.6.1 O que são endpoints?
+
+Uma Web API (Interface de Programação de Aplicações Web) é um conjunto de regras e protocolos que permite que diferentes aplicações se comuniquem entre si através da web. Nesse contexto, os endpoints são os pontos de acesso específicos dentro de uma Web API. Eles são os URLs para os quais as requisições HTTP são enviadas e de onde as respostas são recebidas. Cada endpoint corresponde a um recurso ou uma ação específica que a API pode realizar (por exemplo, /eventos para listar eventos, /users/:id para buscar um usuário por ID, /favoritos para gerenciar favoritos). Combinados com métodos HTTP (como GET, POST, PUT, DELETE), eles definem as operações que podem ser executadas. Esses conceitos são muito importantes para o projeto pois eles permitem que o frontend se comunique com o backend. A estrutura de endpoints e Web APIs força a separação clara entre a interface do usuário e a lógica do servidor. 
+
+#### 3.6.1.2 Endpoints do projeto
+
+Atualmente, os endpoints do projeto são:
+
+1. **Endpoints de Frontend (presentes em frontRoutes.js e index.js)**
+Estes são as URLs que o navegador do usuário acessaria diretamente para ver as páginas HTML (renderizadas por EJS).
+
+##### GET /
+
+**Propósito:** Página inicial do aplicativo. É a rota principal que leva à home page, funcionando como ponto de entrada.
+
+##### GET /login
+
+**Propósito:** Página de login do usuário. Contém um formulário para o usuário inserir suas credenciais e acessar o sistema.
+
+##### GET /register
+
+**Propósito:** Página de registro de novo usuário. Oferece um formulário para que novos usuários possam criar uma conta.
+
+##### GET /meus-eventos
+
+**Propósito:** Página que exibe os eventos em que o usuário está inscrito e os eventos que ele favoritou. Requer que o usuário esteja logado e busca informações de InscricaoModel e FavoritoModel para personalizar o conteúdo.
+
+##### GET /profile
+
+**Propósito:** Página de perfil do usuário. Permite ao usuário visualizar e gerenciar suas informações pessoais e configurações de conta.
+
+##### GET /eventos
+
+**Propósito:** Página de listagem de eventos disponíveis. Permite a aplicação de filtros via parâmetros de query string e oferece alternância de visualização entre grid e lista.
+
+##### GET /event/:id
+
+**Propósito:** Página de detalhes de um evento específico. :id é um parâmetro na URL que identifica o evento a ser exibido (ex: /event/123).
+
+##### GET /forgot-password
+
+**Propósito:** Página para iniciar o processo de recuperação de senha. Não implementado devidamente.
+
+2. **Endpoints de API (presentes em /api/auth.js, /api/favoritos.js, apiExtras.js, apiRoutes.js e /api/inscricoes.js)**
+
+Estes são os URLs que o JavaScript do frontend ou outros serviços consumiriam para interagir com os dados do backend.
+
+##### POST /login
+
+**Propósito:** Autenticar um usuário. Recebe credenciais (email) no corpo da requisição e tenta realizar o login.
+
+##### GET /eventos
+
+**Propósito:** Retorna uma lista de todos os eventos em formato JSON. Implementada diretamente no arquivo principal do servidor, serve como um endpoint de API para listar eventos.
+
+##### POST /api/eventos
+
+**Propósito:** Criar um novo evento. Espera dados de evento (nome, tipo, localização, data, duração, classificação, acessibilidade) no corpo da requisição para adicionar um novo registro ao banco de dados.
+
+##### GET /api/eventos/:id
+
+**Propósito:** Obter os detalhes de um evento específico em formato JSON. :id representa o identificador único do evento.
+
+##### PUT /api/eventos/:id
+
+**Propósito:** Atualizar as informações de um evento existente. :id indica o evento a ser modificado, e os novos dados são enviados no corpo da requisição.
+
+##### DELETE /api/eventos/:id
+
+**Propósito:** Remover um evento do sistema. :id especifica qual evento deve ser excluído.
+
+##### POST /api/inscricoes
+
+**Propósito:** Inscrever um usuário em um evento. Recebe o ID do evento no corpo da requisição. Requer que o usuário esteja autenticado.
+
+##### GET /api/favoritos/check/:eventoId
+
+**Propósito:** Verificar se um evento específico está marcado como favorito pelo usuário logado. Retorna um status booleano (verdadeiro/falso).
+
+##### POST /api/favoritos
+
+**Propósito:** Adicionar ou remover um evento da lista de favoritos do usuário (funcionalidade "toggle"). Com base no estado atual, adiciona se não for favorito ou remove se já for.
+
+##### DELETE /api/favoritos/:eventoId
+
+**Propósito:** Remover explicitamente um evento da lista de favoritos do usuário. :eventoId é o identificador do evento a ser desfavoritado.
+
+##### GET /api/favoritos
+
+**Propósito:** Listar todos os eventos que o usuário marcou como favoritos. Retorna os dados dos eventos favoritados em JSON.
+
+##### POST /profile/update
+
+**Propósito:** Atualizar as informações de perfil do usuário. Recebe os dados do perfil atualizados no corpo da requisição.
+
+##### POST /profile/change-password
+
+**Propósito:** Alterar a senha de um usuário. Recebe a senha atual, a nova senha e sua confirmação no corpo da requisição.
+
+##### GET /api/eventos/filter?tipo=X&data=Y...
+
+**Propósito:** Endpoint (implícito pelos formulários de filtro do frontend) para buscar eventos com base em diversos critérios de filtragem. Os filtros (tipo, data, localização, classificação, acessibilidade) seriam passados como parâmetros de query string na URL.
 
 ### 3.7 Interface e Navegação
 
-*Descreva e ilustre aqui o desenvolvimento do frontend do sistema web, explicando brevemente o que foi entregue em termos de código e sistema. Utilize prints de tela para ilustrar.*
+#### 3.7.1 Introdução: mudanças 
+
+##### 3.7.1.1 Mudanças no backend
+
+Algumas informações contidas no backend previamente precisaram ser adaptadas conforme necessidade. Aqui vão todas as mudanças feitas:
+
+1. *Atualização do banco de dados:* as tabelas `categorias` e `categoria_eventos` foram removidas pois não havia necessidade de mantê-las, já que seu propósito já estava sendo cumprido pela coluna "tipo" de `eventos`. A tabela eventos foi atualizada, para colocar duas novas colunas, `acessibilidade` e `classificacao_indicativa`, com o intuito de filtrar os eventos. Por fim, foram adicionadas informações de usuários no banco de dados. O código completo atualizado pode ser visto em `database.sql`, na raiz do projeto.
+
+2. *Comentário de todos os códigos:* todos os códigos foram comentados para melhor entendimento de cada linha deles.
+
+3. *Implementação dos models para os favoritos e para as inscrições em eventos:* foram criados os arquivos `InscricaoModels.js` e `FavoritoModels.js.` Esses arquivos criam a lógica por trás das operações de inscrição em um evento e favoritar o evento.
+
+4. *Implementação do script `home.js`:* de forma semelhante ao script de eventos, esse script serve para melhorar a comunicação entre back e front, e chama funções fetch.
+
+5. *Implementação do `custom.css`:* Esse arquivo css tem como finalidade implementar estilizações extras em todas as páginas.
+
+6. *Separação das rotas em /api e criação de todas as rotas necessárias para a execução do projeto*
+
+##### 3.7.1.2. Mudanças no frontend e CSS
+
+Uma das maiores mudanças gerais foi a implementação de CSS em todo o site. Isso foi feito em cada página, usando o `<style>`, o que, apesar de não ser ideal, foi usado pela complexidade dos códigos e classes. Para conseguir implementar um CSS muito fiel ao protótipo de alta fidelidade, foi utilizado o Tailwind, uma biblioteca que oferece classes CSS prontas para serem usadas no HTML para estilizar elementos web.
+
+Além disso, foram implementados no front end diversas páginas, conforme as rotas e o protótipo de alta fidelidade, cada uma com um propósito de utilização do usuário. A pasta views agora se subdivide em /layout (páginas do projeto), /partials (arquivos gerais para as páginas) e error.ejs (arquivo que padroniza as mensagens de erro que podem aparecer no site).
+
+#### 3.7.2 Galeria demonstrativa
+
+Aqui, são mostradas as fotos do site em seu estado atual, mostrando o produto final da implementação.
+
+<div align="center">
+    <sub>Figura 22: Homepage </sub>
+    <br>
+    <img src="/assets/homepage.png" width="80%">
+    <br>
+    <sup>Fonte: Material produzido pela autora (2025)</sup>
+    <br>
+    <br>
+</div>
+
+A homepage mostra todos os eventos disponíveis, uma header comum a todas as páginas, e vários botões que direcionam para outras páginas.
+
+<div align="center">
+    <sub>Figura 23: Detalhamento de um evento </sub>
+    <br>
+    <img src="/assets/evento_detalhe.png" width="80%">
+    <br>
+    <sup>Fonte: Material produzido pela autora (2025)</sup>
+    <br>
+    <br>
+</div>
+
+Aqui é a página específica de cada evento. Pode-se observar uma descrição, uma foto do evento e as principais características dele.
+
+<div align="center">
+    <sub>Figura 24: Inscrevendo-se no evento </sub>
+    <br>
+    <img src="/assets/inscricao.png" width="80%">
+    <br>
+    <sup>Fonte: Material produzido pela autora (2025)</sup>
+    <br>
+    <br>
+</div>
+
+Após clicar no botão de inscrever-se, aparece esse alerta confirmando a inscrição (ou informando um erro).
+
+<div align="center">
+    <sub>Figura 25: Favoritando o evento </sub>
+    <br>
+    <img src="/assets/favoritar.png" width="80%">
+    <br>
+    <sup>Fonte: Material produzido pela autora (2025)</sup>
+    <br>
+    <br>
+</div>
+
+De forma semelhante à inscrição, esse alerta surge ao apertar no ícone de estrela para favoritar.
+
+<div align="center">
+    <sub>Figura 26: Meus eventos - inscrições </sub>
+    <br>
+    <img src="/assets/minhas_inscricoes.png" width="80%">
+    <br>
+    <sup>Fonte: Material produzido pela autora (2025)</sup>
+    <br>
+    <br>
+</div>
+
+Aqui, é possível ver todas as inscrições do usuário. Essa página é acessada após clicar em "meus eventos" e também engloba os favoritos.
+
+<div align="center">
+    <sub>Figura 27: Meus eventos - favoritos </sub>
+    <br>
+    <img src="/assets/favoritos.png" width="80%">
+    <br>
+    <sup>Fonte: Material produzido pela autora (2025)</sup>
+    <br>
+    <br>
+</div>
+
+A aba de meus favoritos mostra os eventos favoritados.
+
+<div align="center">
+    <sub>Figura 28: Login </sub>
+    <br>
+    <img src="/assets/login.png" width="80%">
+    <br>
+    <sup>Fonte: Material produzido pela autora (2025)</sup>
+    <br>
+    <br>
+</div>
+
+Página de login. O site redireciona para ela após o usuário tentar interagir com um evento na homepage se ele não estiver logado.
+
+<div align="center">
+    <sub>Figura 29: Registrar-se (caso o usuário não tenha login) </sub>
+    <br>
+    <img src="/assets/registrar.png" width="80%">
+    <br>
+    <sup>Fonte: Material produzido pela autora (2025)</sup>
+    <br>
+    <br>
+</div>
+
+Caso o usuário não possua uma conta, nessa página ele pode criar. As informações de cadastro são mandadas diretamente para o banco de dados.
+
+<div align="center">
+    <sub>Figura 30: Meu perfil </sub>
+    <br>
+    <img src="/assets/perfil.png" width="80%">
+    <br>
+    <sup>Fonte: Material produzido pela autora (2025)</sup>
+    <br>
+    <br>
+</div>
+
+Aqui, podem-se ver informações do usuário no site. Nessa aba, também é possível mudar a senha, caso necessário, e atualizar preferências de notificações.
+
+<div align="center">
+    <sub>Figura 31: Eventos filtrados (nesse caso por acessibilidade) </sub>
+    <br>
+    <img src="/assets/eventos_filtrados.png" width="80%">
+    <br>
+    <sup>Fonte: Material produzido pela autora (2025)</sup>
+    <br>
+    <br>
+</div>
+
+Após utilizar os filtros contidos do lado esquerdo e clicar no botão de filtrar, aparecem apenas os eventos que correspondem a esse filtro.
 
 ---
 

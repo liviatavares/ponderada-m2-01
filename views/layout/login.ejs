@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Login - Event Calendar</title> <script src="https://cdn.tailwindcss.com"></script> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> <script>
+        // Configuração personalizada do Tailwind CSS, estendendo cores.
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'event-blue': '#2563eb',   // Cor azul personalizada.
+                        'event-yellow': '#fbbf24', // Cor amarela personalizada.
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-yellow-50 min-h-screen flex items-center justify-center p-4">
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-event-yellow opacity-10 rounded-full"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-event-blue opacity-10 rounded-full"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-event-blue to-event-yellow opacity-5 rounded-full"></div>
+    </div>
+
+    <div class="relative w-full max-w-md">
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center space-x-3 mb-4">
+            <a href="/" class="flex items-center space-x-3">
+            <img src="/assets/logo.png" alt="Logo" class="h-14 w-auto">
+            </a>
+            </div>
+            <p class="text-gray-600 text-lg">Bem-vindo de volta!</p>
+            <p class="text-gray-500 text-sm">Entre na sua conta para continuar</p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+            <div class="bg-gradient-to-r from-event-blue to-blue-600 px-8 py-6">
+                <h3 class="text-xl font-bold text-white text-center">Fazer Login</h3>
+            </div>
+
+            <div class="p-8">
+                <% if (typeof error !== 'undefined' && error) { %>
+                    <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-exclamation-circle text-red-500"></i>
+                            <span class="text-red-700 text-sm"><%= error %></span>
+                        </div>
+                    </div>
+                <% } %>
+
+                <% if (typeof success !== 'undefined' && success) { %>
+                    <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-check-circle text-green-500"></i>
+                            <span class="text-green-700 text-sm"><%= success %></span>
+                        </div>
+                    </div>
+                <% } %>
+
+                <form id="loginForm" action="/login" method="POST" class="space-y-6">
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-envelope mr-2 text-gray-400"></i>
+                            Email
+                        </label>
+                        <div class="relative">
+                            <input type="email" id="email" name="email" required 
+                                   class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-event-blue focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
+                                   placeholder="seu@email.com">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-envelope text-gray-400"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-lock mr-2 text-gray-400"></i>
+                            Senha
+                        </label>
+                        <div class="relative">
+                            <input type="password" id="password" name="password" required 
+                                   class="w-full px-4 py-3 pl-12 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-event-blue focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
+                                   placeholder="••••••••">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-lock text-gray-400"></i>
+                            </div>
+                            <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                <i id="passwordToggle" class="fas fa-eye text-gray-400 hover:text-gray-600 transition-colors"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center">
+                            <input type="checkbox" name="remember" class="w-4 h-4 text-event-blue border-gray-300 rounded focus:ring-event-blue">
+                            <span class="ml-2 text-sm text-gray-600">Lembrar de mim</span>
+                        </label>
+                        <a href="/forgot-password" class="text-sm text-event-blue hover:text-blue-700 font-medium transition-colors">
+                            Esqueceu a senha?
+                        </a>
+                    </div>
+
+                    <button type="submit" id="submitBtn" 
+                            class="w-full bg-gradient-to-r from-event-blue to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] focus:ring-4 focus:ring-blue-200">
+                        <span id="submitText">
+                            <i class="fas fa-sign-in-alt mr-2"></i>
+                            Entrar
+                        </span>
+                        <span id="loadingText" class="hidden">
+                            <i class="fas fa-spinner fa-spin mr-2"></i>
+                            Entrando...
+                        </span>
+                    </button>
+                </form>
+
+                <div class="my-8">
+                    <div class="relative">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-300"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-4 bg-white text-gray-500">ou</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 px-8 py-6 border-t border-gray-100">
+                <p class="text-center text-gray-600">
+                    Não tem uma conta? 
+                    <a href="/register" class="text-event-blue hover:text-blue-700 font-medium transition-colors">
+                        Registre-se aqui
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Funcionalidade de Alternar Visibilidade da Senha ---
+        function togglePassword() {
+            const passwordField = document.getElementById('password'); // Campo de senha.
+            const toggleIcon = document.getElementById('passwordToggle'); // Ícone de olho.
+
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text'; // Altera para texto.
+                toggleIcon.classList.remove('fa-eye'); // Muda o ícone para "olho riscado".
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordField.type = 'password'; // Altera para senha.
+                toggleIcon.classList.remove('fa-eye-slash'); // Muda o ícone para "olho".
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
+        // --- Funcionalidade de Estado de Carregamento do Formulário ---
+        // Exibe um spinner e desabilita o botão ao submeter o formulário.
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            const submitBtn = document.getElementById('submitBtn');     // Botão de submissão.
+            const submitText = document.getElementById('submitText');   // Texto "Entrar".
+            const loadingText = document.getElementById('loadingText'); // Texto "Entrando...".
+
+            submitBtn.disabled = true;       // Desabilita o botão.
+            submitText.classList.add('hidden'); // Esconde o texto normal.
+            loadingText.classList.remove('hidden'); // Mostra o texto de carregamento.
+            submitBtn.classList.add('opacity-75'); // Reduz opacidade para indicar carregamento.
+
+            // Nota: Em uma aplicação real, você provavelmente faria a submissão via AJAX.
+        });
+
+        // --- Animações de Foco em Campos de Input ---
+        // Adiciona um anel de foco e efeito de transição quando os inputs são focados.
+        document.querySelectorAll('input[type="email"], input[type="password"]').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('ring-2', 'ring-event-blue'); // Adiciona anel azul.
+            });
+
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('ring-2', 'ring-event-blue'); // Remove anel ao perder o foco.
+            });
+        });
+
+        // --- Validação de Email em Tempo Real ---
+        // Adiciona borda vermelha se o email for inválido.
+        document.getElementById('email').addEventListener('input', function() {
+            const email = this.value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex simples para validação de email.
+            
+            if (email && !emailRegex.test(email)) {
+                this.classList.add('border-red-300', 'focus:ring-red-500'); // Adiciona borda vermelha.
+                this.classList.remove('border-gray-300', 'focus:ring-event-blue'); // Remove borda azul.
+            } else {
+                this.classList.remove('border-red-300', 'focus:ring-red-500'); // Remove borda vermelha.
+                this.classList.add('border-gray-300', 'focus:ring-event-blue'); // Adiciona borda azul.
+            }
+        });
+
+        // --- Ocultar Mensagens de Erro/Sucesso Automaticamente ---
+        // Faz com que as mensagens de alerta desapareçam após 5 segundos.
+        setTimeout(() => {
+            const messages = document.querySelectorAll('.bg-red-50, .bg-green-50'); // Seleciona mensagens de erro/sucesso.
+            messages.forEach(message => {
+                message.style.transition = 'opacity 0.5s ease-out'; // Adiciona transição de opacidade.
+                message.style.opacity = '0'; // Define opacidade para 0.
+                setTimeout(() => {
+                    if (message.parentNode) {
+                        message.parentNode.removeChild(message); // Remove o elemento do DOM.
+                    }
+                }, 500); // Espera a transição terminar antes de remover.
+            });
+        }, 5000); // Mensagens visíveis por 5 segundos.
+
+        // --- Atalhos de Teclado ---
+        // Ao pressionar Enter no campo de email, move o foco para o campo de senha.
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && document.activeElement.id === 'email') {
+                e.preventDefault(); // Previne o envio padrão do formulário.
+                document.getElementById('password').focus(); // Foca no campo de senha.
+            }
+        });
+
+        // --- Efeito de "Floating Label" (para inputs) ---
+        // Adiciona uma classe quando o input tem valor para aplicar estilos de "label flutuante".
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', function() {
+                if (this.value) {
+                    this.classList.add('has-value'); // Adiciona classe 'has-value'.
+                } else {
+                    this.classList.remove('has-value'); // Remove classe 'has-value'.
+                }
+            });
+        });
+    </script>
+
+    <style>
+        /* Animação de fade-in para o cartão branco. */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .bg-white { animation: fadeIn 0.6s ease-out; }
+
+        /* Animação de rotação para spinners. */
+        .fa-spin { animation: fa-spin 1s infinite linear; }
+        @keyframes fa-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Efeitos de foco e hover para inputs e botões. */
+        input:focus { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15); }
+        button:hover { box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15); }
+
+        /* Efeito de "Floating Label": muda o fundo do input quando há valor. */
+        .has-value { background-color: white !important; }
+
+        /* Estilos personalizados para a barra de rolagem. */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Ajustes responsivos para telas menores. */
+        @media (max-width: 640px) {
+            .bg-white { margin: 1rem; border-radius: 1rem; }
+        }
+    </style>
+</body>
+</html>

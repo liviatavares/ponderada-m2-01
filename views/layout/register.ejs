@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Registro - Event Calendar</title> <script src="https://cdn.tailwindcss.com"></script> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> <script>
+        // Configuração personalizada do Tailwind CSS, estendendo as cores padrão.
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'event-blue': '#2563eb',   // Define uma cor azul personalizada para a aplicação.
+                        'event-yellow': '#fbbf24', // Define uma cor amarela personalizada.
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-yellow-50 min-h-screen flex items-center justify-center p-4">
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-event-yellow opacity-10 rounded-full"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-event-blue opacity-10 rounded-full"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-event-blue to-event-yellow opacity-5 rounded-full"></div>
+    </div>
+
+    <div class="relative w-full max-w-2xl">
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center space-x-3 mb-4">
+                <a href="/" class="flex items-center space-x-3">
+                    <img src="/assets/logo.png" alt="Logo" class="h-14 w-auto">
+                </a>
+            </div>
+            <p class="text-gray-600 text-lg">Crie sua conta</p>
+            <p class="text-gray-500 text-sm">Junte-se à nossa comunidade de eventos</p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+            <div class="bg-gradient-to-r from-event-yellow to-yellow-500 px-8 py-6">
+                <h3 class="text-xl font-bold text-gray-800 text-center">Cadastro</h3>
+            </div>
+
+            <div class="p-8">
+                <% if (error) { %>
+                    <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-exclamation-circle text-red-500"></i>
+                            <span class="text-red-700 text-sm"><%= error %></span>
+                        </div>
+                    </div>
+                <% } %>
+
+                <form id="registerForm" action="/register" method="POST" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="nome" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-user mr-2 text-gray-400"></i>
+                                Nome Completo
+                            </label>
+                            <div class="relative">
+                                <input type="text" id="nome" name="nome" required 
+                                       class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-event-blue focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
+                                       placeholder="Seu nome completo">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-user text-gray-400"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-envelope mr-2 text-gray-400"></i>
+                                Email
+                            </label>
+                            <div class="relative">
+                                <input type="email" id="email" name="email" required 
+                                       class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-event-blue focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
+                                       placeholder="seu@email.com">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-envelope text-gray-400"></i>
+                                </div>
+                            </div>
+                            <p id="emailFeedback" class="mt-1 text-xs text-red-600 hidden">Email inválido</p>
+                        </div>
+
+                        <div>
+                            <label for="data_nascimento" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-birthday-cake mr-2 text-gray-400"></i>
+                                Data de Nascimento
+                            </label>
+                            <div class="relative">
+                                <input type="date" id="data_nascimento" name="data_nascimento" required 
+                                       class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-event-blue focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-calendar-alt text-gray-400"></i>
+                                </div>
+                            </div>
+                            <p id="ageFeedback" class="mt-1 text-xs text-red-600 hidden">Você deve ter pelo menos 18 anos</p>
+                        </div>
+
+                        <div>
+                            <label for="localizacao" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-map-marker-alt mr-2 text-gray-400"></i>
+                                Localização
+                            </label>
+                            <div class="relative">
+                                <input type="text" id="localizacao" name="localizacao" required 
+                                       class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-event-blue focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
+                                       placeholder="Cidade, Estado">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-map-marker-alt text-gray-400"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="senha" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-lock mr-2 text-gray-400"></i>
+                            Senha
+                        </label>
+                        <div class="relative">
+                            <input type="password" id="senha" name="senha" required 
+                                   class="w-full px-4 py-3 pl-12 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-event-blue focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
+                                   placeholder="••••••••">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-lock text-gray-400"></i>
+                            </div>
+                            <button type="button" onclick="togglePassword('senha')" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                <i class="fas fa-eye text-gray-400 hover:text-gray-600 transition-colors"></i>
+                            </button>
+                        </div>
+                        <div class="mt-2">
+                            <div class="text-xs text-gray-500">
+                                A senha deve ter pelo menos 8 caracteres
+                            </div>
+                            <div id="passwordStrength" class="mt-1 h-1 bg-gray-200 rounded-full overflow-hidden">
+                                <div id="strengthBar" class="h-full transition-all duration-300"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="confirmarSenha" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-lock mr-2 text-gray-400"></i>
+                            Confirmar Senha
+                        </label>
+                        <div class="relative">
+                            <input type="password" id="confirmarSenha" name="confirmarSenha" required 
+                                   class="w-full px-4 py-3 pl-12 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-event-blue focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
+                                   placeholder="••••••••">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-lock text-gray-400"></i>
+                            </div>
+                            <button type="button" onclick="togglePassword('confirmarSenha')" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                <i class="fas fa-eye text-gray-400 hover:text-gray-600 transition-colors"></i>
+                            </button>
+                        </div>
+                        <div id="passwordMatch" class="mt-1 text-xs hidden"></div>
+                    </div>
+
+                    <div class="flex items-start">
+                        <div class="flex items-center h-5">
+                            <input id="terms" name="terms" type="checkbox" required class="w-4 h-4 text-event-blue border-gray-300 rounded focus:ring-event-blue">
+                        </div>
+                        <div class="ml-3 text-sm">
+                            <label for="terms" class="text-gray-600">
+                                Eu concordo com os <a href="/terms" class="text-event-blue hover:text-blue-700 font-medium">Termos de Serviço</a> e <a href="/privacy" class="text-event-blue hover:text-blue-700 font-medium">Política de Privacidade</a>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submitBtn" 
+                            class="w-full bg-gradient-to-r from-event-yellow to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-800 font-medium py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] focus:ring-4 focus:ring-yellow-200">
+                        <span id="submitText">
+                            <i class="fas fa-user-plus mr-2"></i>
+                            Criar Conta
+                        </span>
+                        <span id="loadingText" class="hidden">
+                            <i class="fas fa-spinner fa-spin mr-2"></i>
+                            Processando...
+                        </span>
+                    </button>
+                </form>
+
+                <div class="my-8">
+                    <div class="relative">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-300"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-4 bg-white text-gray-500">ou</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 px-8 py-6 border-t border-gray-100">
+                <p class="text-center text-gray-600">
+                    Já tem uma conta? 
+                    <a href="/login" class="text-event-blue hover:text-blue-700 font-medium transition-colors">
+                        Faça login aqui
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Funcionalidade de Alternar Visibilidade da Senha ---
+        // Altera o tipo do input de senha entre 'password' e 'text' e muda o ícone de olho.
+        function togglePassword(fieldId) {
+            const passwordField = document.getElementById(fieldId); // Campo de senha.
+            // Seleciona o ícone de olho (assumindo a estrutura HTML específica).
+            const toggleIcon = passwordField.nextElementSibling.nextElementSibling.querySelector('i');
+
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text'; // Altera para texto visível.
+                toggleIcon.classList.remove('fa-eye'); // Troca o ícone de olho aberto para olho riscado.
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordField.type = 'password'; // Altera para senha oculta.
+                toggleIcon.classList.remove('fa-eye-slash'); // Troca o ícone de olho riscado para olho aberto.
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
+        // --- Verificador de Força da Senha ---
+        // Avalia a força da senha digitada e atualiza uma barra de progresso visual.
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            const strengthBar = document.getElementById('strengthBar'); // Elemento da barra de progresso.
+
+            // Adiciona pontos de força com base em critérios: comprimento, minúsculas, maiúsculas, números.
+            if (password.length >= 8) strength += 25;
+            if (/[a-z]/.test(password)) strength += 25;
+            if (/[A-Z]/.test(password)) strength += 25;
+            if (/[0-9]/.test(password)) strength += 25;
+
+            strengthBar.style.width = strength + '%'; // Atualiza a largura da barra.
+
+            // Muda a cor da barra com base na força (vermelho, amarelo, verde).
+            if (strength < 50) {
+                strengthBar.className = 'h-full transition-all duration-300 bg-red-500'; // Fraca.
+            } else if (strength < 75) {
+                strengthBar.className = 'h-full transition-all duration-300 bg-yellow-500'; // Média.
+            } else {
+                strengthBar.className = 'h-full transition-all duration-300 bg-green-500'; // Forte.
+            }
+        }
+
+        // --- Verificador de Correspondência de Senhas ---
+        // Compara a senha e a confirmação da senha e exibe uma mensagem de correspondência.
+        function checkPasswordMatch() {
+            const password = document.getElementById('senha').value;
+            const confirmPassword = document.getElementById('confirmarSenha').value;
+            const matchDiv = document.getElementById('passwordMatch'); // Div para exibir a mensagem.
+
+            if (confirmPassword.length > 0) { // Só verifica se o campo de confirmação não está vazio.
+                if (password === confirmPassword) {
+                    matchDiv.textContent = 'Senhas coincidem';
+                    matchDiv.className = 'mt-1 text-xs text-green-600'; // Mensagem verde de sucesso.
+                    matchDiv.classList.remove('hidden');
+                } else {
+                    matchDiv.textContent = 'Senhas não coincidem';
+                    matchDiv.className = 'mt-1 text-xs text-red-600'; // Mensagem vermelha de erro.
+                    matchDiv.classList.remove('hidden');
+                }
+            } else {
+                matchDiv.classList.add('hidden'); // Oculta a mensagem se o campo de confirmação estiver vazio.
+            }
+        }
+
+        // --- Validação de Email ---
+        // Valida o formato do email usando uma expressão regular e exibe feedback visual.
+        function validateEmail() {
+            const email = document.getElementById('email').value;
+            const emailFeedback = document.getElementById('emailFeedback'); // Elemento para feedback.
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Expressão regular para formato básico de email.
+            
+            if (email && !emailRegex.test(email)) { // Se há um email e ele não corresponde ao regex.
+                document.getElementById('email').classList.add('border-red-300'); // Adiciona borda vermelha.
+                emailFeedback.classList.remove('hidden'); // Exibe a mensagem de feedback.
+                return false; // Indica que a validação falhou.
+            } else {
+                document.getElementById('email').classList.remove('border-red-300'); // Remove borda vermelha.
+                emailFeedback.classList.add('hidden'); // Oculta a mensagem de feedback.
+                return true; // Indica que a validação foi bem-sucedida.
+            }
+        }
+
+        // --- Validação de Idade (Mínimo 18 Anos) ---
+        // Verifica se a data de nascimento indica que o usuário tem pelo menos 18 anos.
+        function validateAge() {
+            const birthDateInput = document.getElementById('data_nascimento');
+            const birthDate = new Date(birthDateInput.value); // Converte o valor do input em um objeto Date.
+            const ageFeedback = document.getElementById('ageFeedback'); // Elemento para feedback.
+            
+            if (birthDateInput.value) { // Se uma data foi selecionada.
+                const today = new Date();
+                let age = today.getFullYear() - birthDate.getFullYear(); // Calcula a idade provisória.
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                
+                // Ajusta a idade se o aniversário ainda não ocorreu no ano atual.
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+                
+                if (age < 18) { // Se a idade for menor que 18.
+                    birthDateInput.classList.add('border-red-300'); // Adiciona borda vermelha.
+                    ageFeedback.classList.remove('hidden'); // Exibe a mensagem de feedback.
+                    return false;
+                } else {
+                    birthDateInput.classList.remove('border-red-300'); // Remove borda vermelha.
+                    ageFeedback.classList.add('hidden'); // Oculta a mensagem de feedback.
+                    return true;
+                }
+            }
+            return true; // Retorna true se nenhuma data foi selecionada (e o campo não é 'required').
+        }
+
+        // --- Gerenciador de Submissão do Formulário de Registro ---
+        // Valida todos os campos ao submeter e exibe mensagens de erro ou um estado de carregamento.
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            const password = document.getElementById('senha').value;
+            const confirmPassword = document.getElementById('confirmarSenha').value;
+            const terms = document.getElementById('terms').checked; // Verifica se os termos foram aceitos.
+            
+            // Revalida todos os campos críticos.
+            const isEmailValid = validateEmail();
+            const isAgeValid = validateAge();
+            const isPasswordValid = password.length >= 8; // Validação de comprimento.
+            const doPasswordsMatch = password === confirmPassword; // Validação de correspondência.
+            
+            // Se alguma validação falhar, previne a submissão e alerta o usuário.
+            if (!isEmailValid || !isAgeValid || !isPasswordValid || !doPasswordsMatch || !terms) {
+                e.preventDefault(); // Previne o envio padrão do formulário.
+                
+                // Alertas específicos para cada falha.
+                if (!isPasswordValid) { alert('A senha deve ter pelo menos 8 caracteres.'); }
+                if (!doPasswordsMatch) { alert('As senhas não coincidem.'); }
+                if (!terms) { alert('Você deve concordar com os Termos de Serviço e Política de Privacidade.'); }
+                
+                return; // Sai da função.
+            }
+            
+            // Se todas as validações passarem, exibe o estado de carregamento.
+            const submitBtn = document.getElementById('submitBtn');     // Botão de submissão.
+            const submitText = document.getElementById('submitText');   // Texto "Criar Conta".
+            const loadingText = document.getElementById('loadingText'); // Texto "Processando...".
+            
+            submitBtn.disabled = true;       // Desabilita o botão.
+            submitText.classList.add('hidden'); // Esconde o texto normal.
+            loadingText.classList.remove('hidden'); // Mostra o texto e spinner de carregamento.
+            submitBtn.classList.add('opacity-75'); // Reduz opacidade para indicar carregamento.
+            // Nota: Em uma aplicação real, a submissão ocorreria aqui, possivelmente via AJAX.
+        });
+
+        // --- Listeners de Eventos para Validação em Tempo Real ---
+        // Chama as funções de validação enquanto o usuário interage com os campos.
+        document.getElementById('senha').addEventListener('input', function() {
+            checkPasswordStrength(this.value); // Verifica força da senha ao digitar.
+        });
+        document.getElementById('confirmarSenha').addEventListener('input', checkPasswordMatch); // Verifica correspondência ao digitar.
+        document.getElementById('email').addEventListener('blur', validateEmail); // Valida email ao sair do campo.
+        document.getElementById('data_nascimento').addEventListener('change', validateAge); // Valida idade ao mudar a data.
+
+        // --- Animações de Foco em Inputs ---
+        // Adiciona um anel de foco e efeito visual ao focar nos inputs.
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('ring-2', 'ring-event-blue'); // Adiciona anel azul.
+            });
+
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('ring-2', 'ring-event-blue'); // Remove anel ao perder o foco.
+            });
+        });
+
+        // --- Define Data Máxima para Campo de Data de Nascimento ---
+        // Impede que usuários selecionem datas que os tornem menores de 18 anos.
+        const today = new Date(); // Data atual.
+        // Calcula a data 18 anos atrás.
+        const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+        // Define o atributo 'max' do input de data para essa data calculada.
+        document.getElementById('data_nascimento').max = maxDate.toISOString().split('T')[0];
+    </script>
+
+    <style>
+        /* Animação de fade-in para o cartão branco. */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .bg-white { animation: fadeIn 0.6s ease-out; }
+
+        /* Animação de rotação para ícones de carregamento (spinners). */
+        .fa-spin { animation: fa-spin 1s infinite linear; }
+        @keyframes fa-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Efeitos de foco e hover para inputs e botões (sombra, leve translação). */
+        input:focus { outline: none; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15); }
+        button:hover { box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15); }
+
+        /* Estilos personalizados para a barra de rolagem (WebKit). */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Ajustes responsivos para o cartão em telas pequenas. */
+        @media (max-width: 640px) {
+            .bg-white { margin: 1rem; border-radius: 1rem; }
+        }
+    </style>
+</body>
+</html>

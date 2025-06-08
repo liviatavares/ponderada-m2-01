@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Detalhes do Evento - Event Calendar</title> <script src="https://cdn.tailwindcss.com"></script> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> <script>
+        // Configuração personalizada do Tailwind CSS, estendendo cores.
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'event-blue': '#2563eb',
+                        'event-yellow': '#fbbf24',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 min-h-screen"> <header class="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-50">
+        <div class="flex items-center justify-between max-w-7xl mx-auto">
+            <a href="/" class="flex items-center space-x-3">
+            <img src="/assets/logo.png" alt="Logo" class="h-14 w-auto">
+            </a>
+
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <i class="fas fa-bell text-event-yellow text-xl"></i>
+                    <span class="absolute -top-1 -right-1 w-3 h-3 bg-event-blue rounded-full flex items-center justify-center">
+                        <span class="text-xs text-white font-bold">1</span>
+                    </span>
+                </div>
+
+                <a href="/meus-eventos" class="bg-event-blue hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors inline-block text-center">Meus Eventos</a>
+
+                <a href="/profile" class="bg-event-yellow rounded-lg px-4 py-2 flex items-center space-x-2 hover:bg-yellow-500 transition-colors">
+                    <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                        <i class="fas fa-user text-gray-600"></i>
+                    </div>
+                    <div>
+                        <div class="text-sm font-semibold text-gray-800">Usuário 1</div>
+                        <div class="text-xs text-gray-600">Meu perfil</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 py-8">
+        <div class="mb-6">
+            <a href="/" class="inline-flex items-center text-event-blue hover:text-blue-700 font-medium transition-colors">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Voltar para Home
+            </a>
+        </div>
+
+        <div class="bg-white border-2 border-event-blue rounded-lg overflow-hidden mb-8">
+            <div class="h-64 bg-gradient-to-br from-event-blue via-blue-600 to-event-yellow relative overflow-hidden">
+                <div class="absolute inset-0 bg-black bg-opacity-10"></div>
+
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="text-white text-center">
+                        <div class="w-24 h-24 border-4 border-white border-opacity-60 transform rotate-45 mb-6 mx-auto"></div>
+                        <div class="text-2xl font-bold opacity-90"><%= evento.tipo %></div> <div class="text-lg opacity-70 mt-2">Evento Especial</div>
+                    </div>
+                </div>
+
+                <div class="absolute inset-0 opacity-20">
+                    <div class="w-full h-full animate-pulse" style="background-image: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.3) 2px, transparent 2px), radial-gradient(circle at 80% 80%, rgba(255,255,255,0.2) 1px, transparent 1px), radial-gradient(circle at 40% 70%, rgba(255,255,255,0.1) 3px, transparent 3px); background-size: 30px 30px, 20px 20px, 40px 40px;"></div>
+                </div>
+
+                <div class="absolute top-4 left-4 w-8 h-8 border-l-2 border-t-2 border-white border-opacity-40"></div>
+                <div class="absolute top-4 right-4 w-8 h-8 border-r-2 border-t-2 border-white border-opacity-40"></div>
+                <div class="absolute bottom-4 left-4 w-8 h-8 border-l-2 border-b-2 border-white border-opacity-40"></div>
+                <div class="absolute bottom-4 right-4 w-8 h-8 border-r-2 border-b-2 border-white border-opacity-40"></div>
+            </div>
+        </div>
+
+        <h1 class="text-4xl font-bold text-center text-gray-800 mb-8"><%= evento.nome_evento %></h1> <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2">
+                <p class="text-gray-600 leading-relaxed text-justify">
+                    Lorem ipsum dolor sit amet... </p>
+            </div>
+
+            <div class="lg:col-span-1">
+                <div class="bg-yellow-50 border-2 border-event-yellow rounded-lg p-6 space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-music w-5 h-5 text-gray-600"></i>
+                        <span class="text-gray-800"><%= evento.tipo %></span> </div>
+
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-users w-5 h-5 text-gray-600"></i>
+                        <span class="text-gray-800">+18</span> </div>
+
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-map-marker-alt w-5 h-5 text-gray-600"></i>
+                        <span class="text-gray-800"><%= evento.localizacao_evento %></span> </div>
+
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-clock w-5 h-5 text-gray-600"></i>
+                        <span class="text-gray-800"><%= evento.duracao %></span> </div>
+
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-calendar w-5 h-5 text-gray-600"></i>
+                        <span class="text-gray-800"><%= new Date(evento.data_evento).toLocaleDateString() %></span> </div>
+
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-wheelchair w-5 h-5 text-gray-600"></i>
+                        <span class="text-gray-800"><%= evento.acessibilidade %></span> </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-center space-x-4 mt-8">
+            <button id="inscreverBtn" class="bg-event-blue hover:bg-blue-700 text-white px-8 py-3 text-lg font-medium rounded-lg transition-colors">
+                Inscrever-se
+            </button>
+
+            <button id="favoriteBtn" class="border-2 border-event-yellow text-event-yellow hover:bg-yellow-50 px-4 py-3 rounded-lg transition-colors">
+                <i class="fas fa-star text-xl"></i> </button>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const eventoId = <%= evento.id %>; // Obtém o ID do evento do servidor (injeta no template).
+
+            // --- Funcionalidade do Botão "Inscrever-se" ---
+            document.getElementById('inscreverBtn').addEventListener('click', async () => {
+                try {
+                    // Envia uma requisição POST para a API de inscrições.
+                    const response = await fetch('/api/inscricoes', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json' // Indica que o corpo é JSON.
+                        },
+                        body: JSON.stringify({ evento_id: eventoId }) // Envia o ID do evento.
+                    });
+
+                    const data = await response.json(); // Pega a resposta JSON da API.
+
+                    if (data.success) {
+                        alert(data.message || 'Inscrição realizada com sucesso!'); // Exibe mensagem de sucesso.
+                        window.location.reload(); // Recarrega a página para atualizar o status.
+                    } else {
+                        alert(data.message || 'Erro ao realizar inscrição.'); // Exibe mensagem de erro.
+                    }
+                } catch (error) {
+                    console.error('Erro:', error); // Loga erro na console.
+                    alert('Erro ao realizar inscrição.'); // Alerta de erro genérico.
+                }
+            });
+
+            // --- Funcionalidade do Botão "Favoritar" ---
+            document.getElementById('favoriteBtn').addEventListener('click', async () => {
+                try {
+                    // Envia uma requisição POST para a API de favoritos.
+                    const response = await fetch('/api/favoritos', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ evento_id: eventoId })
+                    });
+
+                    const data = await response.json(); // Pega a resposta JSON.
+
+                    if (data.success) {
+                        const btn = document.getElementById('favoriteBtn'); // Pega o botão.
+                        const icon = btn.querySelector('i');               // Pega o ícone dentro do botão.
+
+                        // Atualiza a aparência do botão e do ícone com base no novo status de favorito.
+                        if (data.isFavorite) {
+                            btn.classList.add('bg-event-yellow', 'text-gray-800'); // Adiciona estilos de "favoritado".
+                            btn.classList.remove('text-event-yellow', 'hover:bg-yellow-50'); // Remove estilos de "não favoritado".
+                            icon.classList.add('fas'); 
+                            icon.classList.remove('far'); 
+                        } else {
+                            btn.classList.remove('bg-event-yellow', 'text-gray-800'); // Remove estilos de "favoritado".
+                            btn.classList.add('text-event-yellow', 'hover:bg-yellow-50'); // Adiciona estilos de "não favoritado".
+                            icon.classList.remove('fas');
+                            icon.classList.add('far'); 
+                        }
+
+                        alert(data.message || 'Favorito atualizado!'); // Exibe mensagem.
+                    } else {
+                        alert(data.message || 'Erro ao atualizar favoritos.'); // Exibe erro.
+                    }
+                } catch (error) {
+                    console.error('Erro ao favoritar:', error); // Loga erro.
+                    alert('Erro ao atualizar favoritos.'); // Alerta de erro genérico.
+                }
+            });
+
+            // --- Verifica Status de Favorito ao Carregar a Página ---
+            async function checkFavoriteStatus() {
+                try {
+                    // Faz uma requisição GET para verificar o status de favorito.
+                    const response = await fetch(`/api/favoritos/check/${eventoId}`);
+                    const data = await response.json(); // Pega a resposta.
+
+                    // Se o evento for favorito, atualiza a aparência do botão "Favoritar".
+                    if (data.favorite) {
+                        const btn = document.getElementById('favoriteBtn');
+                        const icon = btn.querySelector('i');
+                        btn.classList.add('bg-event-yellow', 'text-gray-800');
+                        btn.classList.remove('text-event-yellow', 'hover:bg-yellow-50');
+                        icon.classList.add('fas');
+                        icon.classList.remove('far');
+                    }
+                } catch (error) {
+                    console.error('Erro ao verificar favorito:', error); // Loga erro.
+                }
+            }
+
+            checkFavoriteStatus(); // Chama a função ao carregar a página.
+        });
+    </script>
+
+    <style>
+        @keyframes pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+        
+        .animate-pulse {
+            animation: pulse 3s infinite; 
+        }
+    </style>
+</body>
+</html>

@@ -53,3 +53,6 @@ describe('userService', () => {
     expect(result).toEqual(deletedUser);
   });
 });
+
+
+// esse arquivo de testes é apenas um template para futuros testes e ainda não foi implementado

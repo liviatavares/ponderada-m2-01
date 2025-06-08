@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Eventos - Event Calendar</title> <script src="https://cdn.tailwindcss.com"></script> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> <script>
+        // Configuração personalizada do Tailwind CSS, estendendo cores.
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'event-blue': '#2563eb',   // Cor azul personalizada.
+                        'event-yellow': '#fbbf24', // Cor amarela personalizada.
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <header class="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-50">
+        <div class="flex items-center justify-between max-w-7xl mx-auto">
+            <a href="/" class="flex items-center space-x-3">
+            <img src="/assets/logo.png" alt="Logo" class="h-14 w-auto">
+            </a>
+
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <i class="fas fa-bell text-event-yellow text-xl"></i>
+                    <span class="absolute -top-1 -right-1 w-3 h-3 bg-event-blue rounded-full flex items-center justify-center">
+                        <span class="text-xs text-white font-bold">1</span>
+                    </span>
+                </div>
+
+                <a href="/meus-eventos" class="bg-event-blue hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors inline-block text-center">Meus Eventos</a>
+
+                <a href="/profile" class="bg-event-yellow rounded-lg px-4 py-2 flex items-center space-x-2 hover:bg-yellow-500 transition-colors">
+                    <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                        <i class="fas fa-user text-gray-600"></i>
+                    </div>
+                    <div>
+                        <div class="text-sm font-semibold text-gray-800">Usuário 1</div>
+                        <div class="text-xs text-gray-600">Meu perfil</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex max-w-7xl mx-auto">
+        <aside class="w-80 bg-white border-r border-gray-200 p-6 min-h-screen">
+            <div class="space-y-6">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-bold text-gray-800">Filtros</h2>
+                    <button onclick="clearAllFilters()" class="text-sm text-gray-500 hover:text-gray-700 transition-colors">
+                        <i class="fas fa-times mr-1"></i>
+                        Limpar
+                    </button>
+                </div>
+
+                <form id="filterForm" action="/eventos" method="GET" class="space-y-6">
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-2">
+                            <input type="checkbox" id="dateFilter" class="w-4 h-4 text-event-blue" <%= filters.data ? 'checked' : '' %>>
+                            <label for="dateFilter" class="text-sm font-medium text-gray-700">Data</label>
+                        </div>
+                        <div class="pl-6">
+                            <input type="date" id="data" name="data" value="<%= filters.data || '' %>" 
+                                   class="w-full bg-event-blue text-white px-3 py-2 rounded-lg border-0 focus:ring-2 focus:ring-blue-500"
+                                   <%= !filters.data ? 'disabled' : '' %>>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-2">
+                            <input type="checkbox" id="locationFilter" class="w-4 h-4 text-event-blue" <%= filters.localizacao ? 'checked' : '' %>>
+                            <label for="locationFilter" class="text-sm font-medium text-gray-700">Localização</label>
+                        </div>
+                        <div class="pl-6">
+                            <div class="relative">
+                                <input type="text" id="localizacao" name="localizacao" value="<%= filters.localizacao || '' %>" 
+                                       placeholder="Digite a localização"
+                                       class="w-full px-3 py-2 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-event-blue focus:border-transparent"
+                                       <%= !filters.localizacao ? 'disabled' : '' %>>
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-map-marker-alt text-gray-400"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-2">
+                            <input type="checkbox" id="typeFilter" class="w-4 h-4 text-event-blue" <%= filters.tipo ? 'checked' : '' %>>
+                            <label for="typeFilter" class="text-sm font-medium text-gray-700">Tipo</label>
+                        </div>
+                        <div class="pl-6">
+                            <select id="tipo" name="tipo" 
+                                    class="w-full bg-event-blue text-white px-3 py-2 rounded-lg border-0 focus:ring-2 focus:ring-blue-500"
+                                    <%= !filters.tipo ? 'disabled' : '' %>>
+                                <option value="">Selecionar</option>
+                                <option value="Show de Rock" <%= filters.tipo === 'Show de Rock' ? 'selected' : '' %>>Show de Rock</option>
+                                <option value="Festival de Comida" <%= filters.tipo === 'Festival de Comida' ? 'selected' : '' %>>Festival de Comida</option>
+                                <option value="Stand-up Comedy" <%= filters.tipo === 'Stand-up Comedy' ? 'selected' : '' %>>Stand-up Comedy</option>
+                                <option value="Peça de Teatro" <%= filters.tipo === 'Peça de Teatro' ? 'selected' : '' %>>Peça de Teatro</option>
+                                <option value="Exposição de Arte" <%= filters.tipo === 'Exposição de Arte' ? 'selected' : '' %>>Exposição de Arte</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-2">
+                            <input type="checkbox" id="ratingFilter" class="w-4 h-4 text-event-blue" <%= filters.classificacao_indicativa ? 'checked' : '' %>>
+                            <label for="ratingFilter" class="text-sm font-medium text-gray-700">Classificação</label>
+                        </div>
+                        <div class="pl-6">
+                            <select id="classificacao_indicativa" name="classificacao_indicativa" 
+                                    class="w-full bg-event-blue text-white px-3 py-2 rounded-lg border-0 focus:ring-2 focus:ring-blue-500"
+                                    <%= !filters.classificacao_indicativa ? 'disabled' : '' %>>
+                                <option value="">Selecionar</option>
+                                <option value="L" <%= filters.classificacao_indicativa === 'L' ? 'selected' : '' %>>Livre</option>
+                                <option value="+10" <%= filters.classificacao_indicativa === '+10' ? 'selected' : '' %>>+10</option>
+                                <option value="+14" <%= filters.classificacao_indicativa === '+14' ? 'selected' : '' %>>+14</option>
+                                <option value="+16" <%= filters.classificacao_indicativa === '+16' ? 'selected' : '' %>>+16</option>
+                                <option value="+18" <%= filters.classificacao_indicativa === '+18' ? 'selected' : '' %>>+18</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-2">
+                            <input type="checkbox" id="accessibilityFilter" class="w-4 h-4 text-event-blue" <%= filters.acessibilidade ? 'checked' : '' %>>
+                            <label for="accessibilityFilter" class="text-sm font-medium text-gray-700">Acessibilidade</label>
+                        </div>
+                        <div class="pl-6">
+                            <select id="acessibilidade" name="acessibilidade" 
+                                    class="w-full bg-event-blue text-white px-3 py-2 rounded-lg border-0 focus:ring-2 focus:ring-blue-500"
+                                    <%= !filters.acessibilidade ? 'disabled' : '' %>>
+                                <option value="">Selecionar</option>
+                                <option value="Sim" <%= filters.acessibilidade === 'Sim' ? 'selected' : '' %>>Sim</option>
+                                <option value="Não" <%= filters.acessibilidade === 'Não' ? 'selected' : '' %>>Não</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2 pt-4">
+                        <button type="submit" class="w-full bg-event-blue hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+                            <i class="fas fa-search mr-2"></i>
+                            Filtrar Eventos
+                        </button>
+                        <a href="/eventos" class="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg font-medium transition-colors block text-center">
+                            <i class="fas fa-times mr-2"></i>
+                            Limpar Filtros
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-gray-200">
+                <button class="p-2 text-gray-600 hover:text-gray-800 transition-colors">
+                    <i class="fas fa-cog text-xl"></i>
+                </button>
+            </div>
+        </aside>
+
+        <main class="flex-1 p-6">
+            <div class="mb-8">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-800">Eventos Disponíveis</h1>
+                        <p class="text-gray-600 mt-1">
+                            <% if (eventos.length > 0) { %>
+                                <%= eventos.length %> evento<%= eventos.length > 1 ? 's' : '' %> encontrado<%= eventos.length > 1 ? 's' : '' %>
+                            <% } else { %>
+                                Nenhum evento encontrado
+                            <% } %>
+                        </p>
+                    </div>
+                    
+                    <div class="flex items-center space-x-2">
+                        <button onclick="toggleView('grid')" id="gridView" class="p-2 rounded-lg bg-event-blue text-white">
+                            <i class="fas fa-th-large"></i> </button>
+                        <button onclick="toggleView('list')" id="listView" class="p-2 rounded-lg bg-gray-200 text-gray-600 hover:bg-gray-300">
+                            <i class="fas fa-list"></i> </button>
+                    </div>
+                </div>
+
+                <% if (Object.keys(filters).length > 0) { %>
+                    <div class="mt-4">
+                        <div class="flex items-center space-x-2 flex-wrap">
+                            <span class="text-sm text-gray-600">Filtros ativos:</span>
+                            <% Object.entries(filters).forEach(([key, value]) => { %>
+                                <% if (value) { %>
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-event-blue text-white">
+                                        <%= key === 'data' ? 'Data' : key === 'localizacao' ? 'Local' : key === 'tipo' ? 'Tipo' : key === 'classificacao_indicativa' ? 'Classificação' : 'Acessibilidade' %>: <%= value %>
+                                        <button onclick="removeFilter('<%= key %>')" class="ml-2 text-white hover:text-gray-200">
+                                            <i class="fas fa-times text-xs"></i> </button>
+                                    </span>
+                                <% } %>
+                            <% }); %>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+
+            <div id="eventsContainer">
+                <% if (eventos.length === 0) { %>
+                    <div class="text-center py-16">
+                        <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-calendar-times text-gray-400 text-3xl"></i>
+                        </div>
+                        <h3 class="text-xl font-medium text-gray-800 mb-2">Nenhum evento encontrado</h3>
+                        <p class="text-gray-600 mb-6">Tente ajustar os filtros ou explorar outros eventos.</p>
+                        <a href="/eventos" class="bg-event-blue hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors inline-flex items-center">
+                            <i class="fas fa-search mr-2"></i>
+                            Ver Todos os Eventos
+                        </a>
+                    </div>
+                <% } else { %>
+                    <div id="gridContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <% eventos.forEach((evento, index) => { %>
+                            <div class="event-card bg-white border-2 <%= index % 2 === 0 ? 'border-event-yellow' : 'border-event-blue' %> rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                                <div class="h-48 <%= index % 4 === 0 ? 'bg-gradient-to-br from-event-blue to-event-yellow' : 
+                                             index % 4 === 1 ? 'bg-gradient-to-bl from-event-yellow to-event-blue' : 
+                                             index % 4 === 2 ? 'bg-gradient-to-tr from-event-blue to-event-yellow' : 
+                                             'bg-gradient-to-tl from-event-yellow to-event-blue' %> relative overflow-hidden">
+                                    <div class="absolute inset-0 bg-black bg-opacity-10"></div>
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="text-white text-center">
+                                            <div class="w-16 h-16 border-2 border-white border-opacity-50 transform rotate-45 mb-4 mx-auto"></div>
+                                            <div class="text-lg font-semibold opacity-80"><%= evento.tipo %></div>
+                                        </div>
+                                    </div>
+                                    <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.2) 2px, transparent 2px), radial-gradient(circle at 75% 75%, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 20px 20px;"></div>
+                                </div>
+
+                                <div class="p-6">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <h3 class="text-lg font-bold text-gray-800 line-clamp-2"><%= evento.nome_evento %></h3>
+                                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-600 ml-2 flex-shrink-0">
+                                            <%= evento.classificacao_indicativa %> </span>
+                                    </div>
+
+                                    <div class="space-y-2 text-sm text-gray-600 mb-4">
+                                        <div class="flex items-center space-x-2">
+                                            <i class="fas fa-calendar w-4 text-event-blue"></i>
+                                            <span><%= new Date(evento.data_evento).toLocaleDateString('pt-BR') %></span> </div>
+                                        <div class="flex items-center space-x-2">
+                                            <i class="fas fa-map-marker-alt w-4 text-event-blue"></i>
+                                            <span class="truncate"><%= evento.localizacao_evento %></span> </div>
+                                        <div class="flex items-center space-x-2">
+                                            <i class="fas fa-tag w-4 text-event-blue"></i>
+                                            <span><%= evento.tipo %></span> </div>
+                                        <div class="flex items-center space-x-2">
+                                            <i class="fas fa-clock w-4 text-event-blue"></i>
+                                            <span><%= evento.duracao %></span> </div>
+                                        <% if (evento.acessibilidade === 'Sim') { %>
+                                            <div class="flex items-center space-x-2">
+                                                <i class="fas fa-wheelchair w-4 text-green-600"></i>
+                                                <span class="text-green-600">Acessível</span> </div>
+                                        <% } %>
+                                    </div>
+
+                                    <div class="flex space-x-2">
+                                        <a href="/eventos/<%= evento.id %>" class="flex-1 bg-event-blue hover:bg-blue-700 text-white py-2 px-3 rounded-lg text-sm font-medium text-center transition-colors">
+                                            Ver Detalhes
+                                        </a>
+                                        <button onclick="toggleFavorite(<%= evento.id %>)" class="bg-event-yellow hover:bg-yellow-500 text-gray-800 p-2 rounded-lg transition-colors">
+                                            <i class="fas fa-heart"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }); %>
+                    </div>
+
+                    <div id="listContainer" class="space-y-4 hidden">
+                        <% eventos.forEach((evento, index) => { %>
+                            <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex-1">
+                                        <div class="flex items-start justify-between mb-2">
+                                            <h3 class="text-xl font-bold text-gray-800"><%= evento.nome_evento %></h3>
+                                            <span class="px-3 py-1 text-sm font-medium rounded-full bg-gray-100 text-gray-600 ml-4">
+                                                <%= evento.classificacao_indicativa %>
+                                            </span>
+                                        </div>
+                                        
+                                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600 mb-4">
+                                            <div class="flex items-center space-x-2">
+                                                <i class="fas fa-calendar text-event-blue"></i>
+                                                <span><%= new Date(evento.data_evento).toLocaleDateString('pt-BR') %></span>
+                                            </div>
+                                            <div class="flex items-center space-x-2">
+                                                <i class="fas fa-map-marker-alt text-event-blue"></i>
+                                                <span><%= evento.localizacao_evento %></span>
+                                            </div>
+                                            <div class="flex items-center space-x-2">
+                                                <i class="fas fa-tag text-event-blue"></i>
+                                                <span><%= evento.tipo %></span>
+                                            </div>
+                                            <div class="flex items-center space-x-2">
+                                                <i class="fas fa-clock text-event-blue"></i>
+                                                <span><%= evento.duracao %></span>
+                                            </div>
+                                        </div>
+                                        
+                                        <% if (evento.acessibilidade === 'Sim') { %>
+                                            <div class="flex items-center space-x-2 text-sm text-green-600 mb-4">
+                                                <i class="fas fa-wheelchair"></i>
+                                                <span>Evento acessível</span>
+                                            </div>
+                                        <% } %>
+                                    </div>
+                                    
+                                    <div class="flex space-x-2 ml-6">
+                                        <a href="/eventos/<%= evento.id %>" class="bg-event-blue hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors">
+                                            Ver Detalhes
+                                        </a>
+                                        <button onclick="toggleFavorite(<%= evento.id %>)" class="bg-event-yellow hover:bg-yellow-500 text-gray-800 p-2 rounded-lg transition-colors">
+                                            <i class="fas fa-heart"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }); %>
+                    </div>
+                <% } %>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // --- Funcionalidade de Filtros ---
+        // Ativa/desativa campos de filtro com base no checkbox.
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const fieldId = this.id.replace('Filter', ''); // Obtém o ID do campo associado.
+                const field = document.getElementById(fieldId);
+                
+                if (this.checked) {
+                    field.disabled = false; // Habilita o campo.
+                    field.focus();          // Coloca o foco no campo.
+                } else {
+                    field.disabled = true;  // Desabilita o campo.
+                    field.value = '';       // Limpa o valor do campo.
+                }
+            });
+        });
+
+        // --- Funcionalidade de Alternar Visualização (Grid/Lista) ---
+        function toggleView(view) {
+            const gridContainer = document.getElementById('gridContainer'); // Contêiner da visualização em grid.
+            const listContainer = document.getElementById('listContainer'); // Contêiner da visualização em lista.
+            const gridBtn = document.getElementById('gridView');           // Botão de grid.
+            const listBtn = document.getElementById('listView');           // Botão de lista.
+
+            if (view === 'grid') {
+                gridContainer.classList.remove('hidden'); // Mostra a grid.
+                listContainer.classList.add('hidden');    // Esconde a lista.
+                gridBtn.classList.add('bg-event-blue', 'text-white'); // Ativa estilo do botão de grid.
+                gridBtn.classList.remove('bg-gray-200', 'text-gray-600');
+                listBtn.classList.remove('bg-event-blue', 'text-white'); // Desativa estilo do botão de lista.
+                listBtn.classList.add('bg-gray-200', 'text-gray-600');
+            } else {
+                gridContainer.classList.add('hidden');    // Esconde a grid.
+                listContainer.classList.remove('hidden'); // Mostra a lista.
+                listBtn.classList.add('bg-event-blue', 'text-white'); // Ativa estilo do botão de lista.
+                listBtn.classList.remove('bg-gray-200', 'text-gray-600');
+                gridBtn.classList.remove('bg-event-blue', 'text-white'); // Desativa estilo do botão de grid.
+                gridBtn.classList.add('bg-gray-200', 'text-gray-600');
+            }
+        }
+
+        // --- Limpar Todos os Filtros ---
+        function clearAllFilters() {
+            window.location.href = '/eventos'; // Redireciona para a página de eventos sem nenhum filtro.
+        }
+
+        // --- Remover um Filtro Específico ---
+        function removeFilter(filterKey) {
+            const url = new URL(window.location); // Cria um objeto URL a partir da URL atual.
+            url.searchParams.delete(filterKey);   // Remove o parâmetro de filtro da URL.
+            window.location.href = url.toString(); // Recarrega a página com a URL atualizada.
+        }
+
+        // --- Alternar Favorito (Adicionar/Remover) ---
+        async function toggleFavorite(eventoId) {
+            try {
+                // Envia uma requisição POST para a API de favoritos.
+                const response = await fetch('/api/favoritos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ evento_id: eventoId })
+                });
+
+                const data = await response.json(); // Pega a resposta JSON.
+                if (data.success) {
+                    showNotification(data.message || 'Favorito atualizado!', 'success'); // Exibe notificação de sucesso.
+                } else {
+                    showNotification(data.message || 'Erro ao atualizar favorito', 'error'); // Exibe notificação de erro.
+                }
+            } catch (error) {
+                console.error('Error:', error); // Loga erro no console.
+                showNotification('Erro ao atualizar favorito', 'error'); // Exibe notificação de erro genérica.
+            }
+        }
+
+        // --- Sistema de Notificações Pop-up ---
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div'); // Cria o elemento div da notificação.
+            // Define classes CSS para estilização e animação.
+            notification.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg transition-all duration-300 transform translate-x-full ${
+                type === 'success' ? 'bg-green-500 text-white' : 
+                type === 'error' ? 'bg-red-500 text-white' : 
+                'bg-blue-500 text-white'
+            }`;
+            // Define o conteúdo HTML da notificação com ícone e mensagem.
+            notification.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'exclamation-triangle' : 'info'}-circle"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+
+            document.body.appendChild(notification); // Adiciona a notificação ao corpo do documento.
+
+            // Anima a notificação para dentro da tela.
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 100);
+
+            // Anima a notificação para fora da tela e a remove após um tempo.
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000); // Notificação visível por 3 segundos.
+        }
+
+        // --- Auto-submissão do Formulário (Opcional) ---
+        // Comentado, mas pode ser ativado para submeter o formulário de filtros automaticamente ao mudar um campo.
+        document.getElementById('filterForm').addEventListener('change', function() {
+            // this.submit();
+        });
+
+        // --- Aplica Filtros via AJAX (opcional) ---
+        async function applyFiltersAjax() {
+            const params = new URLSearchParams(); // Cria um objeto para gerenciar parâmetros de URL.
+            
+            // Lógica para coletar valores dos filtros se os checkboxes estiverem marcados.
+            if (document.getElementById('typeFilter')?.checked) {
+                const tipo = document.getElementById('tipo')?.value;
+                if (tipo) params.append('tipo', tipo);
+            }
+            if (document.getElementById('dateFilter')?.checked) {
+                const data = document.getElementById('data')?.value;
+                if (data) params.append('data', data);
+            }
+            if (document.getElementById('locationFilter')?.checked) {
+                const localizacao = document.getElementById('localizacao')?.value;
+                if (localizacao) params.append('localizacao', localizacao);
+            }
+            if (document.getElementById('ratingFilter')?.checked) {
+                const classificacao_indicativa = document.getElementById('classificacao_indicativa')?.value;
+                if (classificacao_indicativa) params.append('classificacao_indicativa', classificacao_indicativa);
+            }
+            if (document.getElementById('accessibilityFilter')?.checked) {
+                const acessibilidade = document.getElementById('acessibilidade')?.value;
+                if (acessibilidade) params.append('acessibilidade', acessibilidade);
+            }
+            
+            try {
+                console.log('Enviando filtros:', params.toString());
+                // Faz uma requisição AJAX para a API de filtragem de eventos.
+                const response = await fetch('/api/eventos/filter?' + params.toString());
+                const data = await response.json(); // Pega a resposta JSON.
+                
+                console.log('Resposta da API:', data);
+                
+                if (data.success) {
+                    // Se bem-sucedido, atualiza a grade de eventos dinamicamente (requer 'updateEventsGrid').
+                    // updateEventsGrid(data.eventos);
+                    showNotification('Filtros aplicados com sucesso!', 'success');
+                } else {
+                    console.error('Erro ao filtrar:', data.error);
+                    showNotification('Erro ao aplicar filtros: ' + data.error, 'error');
+                }
+            } catch (error) {
+                console.error('Erro na requisição:', error);
+                showNotification('Erro de conexão. Tente novamente.', 'error');
+            }
+        }
+
+        // --- Função para Aplicar Filtros (Redirecionando a Página) ---
+        function applyFilters() {
+            const params = new URLSearchParams(); // Cria parâmetros de URL.
+            
+            // Coleta valores dos filtros (similar a applyFiltersAjax).
+            if (document.getElementById('typeFilter')?.checked) {
+                const tipo = document.getElementById('tipo')?.value;
+                if (tipo) params.append('tipo', tipo);
+            }
+            if (document.getElementById('dateFilter')?.checked) {
+                const data = document.getElementById('data')?.value;
+                if (data) params.append('data', data);
+            }
+            if (document.getElementById('locationFilter')?.checked) {
+                const localizacao = document.getElementById('localizacao')?.value;
+                if (localizacao) params.append('localizacao', localizacao);
+            }
+            if (document.getElementById('ratingFilter')?.checked) {
+                const classificacao_indicativa = document.getElementById('classificacao_indicativa')?.value;
+                if (classificacao_indicativa) params.append('classificacao_indicativa', classificacao_indicativa);
+            }
+            if (document.getElementById('accessibilityFilter')?.checked) {
+                const acessibilidade = document.getElementById('acessibilidade')?.value;
+                if (acessibilidade) params.append('acessibilidade', acessibilidade);
+            }
+            
+            window.location.href = '/eventos?' + params.toString(); // Redireciona para a página com os filtros na URL.
+        }
+
+        // --- Event Listeners ao Carregar o DOM ---
+        document.addEventListener('DOMContentLoaded', function() {
+            // Listener para o botão de filtrar (submete o formulário, usando applyFilters padrão).
+            const filterButton = document.querySelector('button[type="submit"]');
+            if (filterButton) {
+                filterButton.addEventListener('click', function(e) {
+                    e.preventDefault(); // Previne o envio padrão do formulário.
+                    applyFilters();     // Chama a função para aplicar os filtros.
+                });
+            }
+        });
+        
+    </script>
+
+    <style>
+        /* Animações personalizadas para o card de evento */
+        .event-card { transition: all 0.3s ease; }
+        .event-card:hover { transform: translateY(-4px); }
+
+        /* Estilo para truncar texto em 2 linhas */
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Estilos personalizados para a barra de rolagem */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</body>
+</html>

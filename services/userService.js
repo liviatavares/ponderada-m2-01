@@ -1,5 +1,3 @@
-// services/userService.js
-
 const db = require('../config/db');
 
 // Função para obter todos os usuários

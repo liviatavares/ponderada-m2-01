@@ -11,11 +11,13 @@
     "init-db": "node scripts/runSQLScript.js"
   },
   "dependencies": {
+    "body-parser": "^2.2.0",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
-    "pg": "^8.7.1"
+    "express-session": "^1.17.3",
+    "pg": "^8.16.0"
   },
   "devDependencies": {
     "jest": "^27.0.6",

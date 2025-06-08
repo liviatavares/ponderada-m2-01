@@ -69,3 +69,5 @@ describe('userController', () => {
     expect(res.json).toHaveBeenCalledWith(deletedUser);
   });
 });
+
+// esse arquivo de testes é apenas um template para futuros testes e ainda não foi implementado

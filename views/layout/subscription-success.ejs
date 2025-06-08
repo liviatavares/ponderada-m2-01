@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Inscrição Realizada - Event Calendar</title> </head>
+<body>
+    <h1>Inscrição Realizada com Sucesso!</h1> <p>Sua inscrição para o evento foi confirmada.</p> <div>
+        <h2>Detalhes da Inscrição</h2> <p><strong>Evento:</strong> <%= evento.nome_evento %></p> <p><strong>Data do Evento:</strong> <%= evento.data_evento %></p> <p><strong>Local:</strong> <%= evento.localizacao_evento %></p> <p><strong>Data da Inscrição:</strong> <%= inscricao.data_inscricao %></p> </div>
+
+    <div>
+        <a href="/">Voltar para Home</a> <a href="/event/<%= evento.id %>">Ver Detalhes do Evento</a> </div>
+</body>
+</html>

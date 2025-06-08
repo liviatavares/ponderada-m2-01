@@ -1,0 +1,285 @@
+<aside class="w-80 bg-white border-r border-gray-200 p-6 min-h-screen">
+  <div class="border-b border-gray-200 pb-2 mb-4">
+    <h2 class="text-xl font-bold text-gray-800">Filtros</h2> </div>
+
+  <form id="filterForm" class="space-y-6"> <div class="filter-section">
+      <div class="flex items-center space-x-2 mb-3">
+        <input type="checkbox" id="locationFilter" class="w-4 h-4 text-event-blue border-gray-300 rounded focus:ring-event-blue">
+        <label for="locationFilter" class="text-sm font-medium text-gray-700">Localização</label> </div>
+      <div class="pl-6" id="locationControls"> <div class="flex justify-between text-xs text-gray-500 mb-2">
+          <span>0km</span> <span>100km</span> </div>
+        <div class="relative">
+          <input type="range" id="distanceRange" name="distance" min="0" max="100" value="50" 
+                 class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider" disabled> <div class="flex justify-center mt-2">
+            <span id="distanceValue" class="text-sm text-gray-600">50km</span> </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <div class="flex items-center space-x-2 mb-3">
+        <input type="checkbox" id="typeFilter" class="w-4 h-4 text-event-blue border-gray-300 rounded focus:ring-event-blue">
+        <label for="typeFilter" class="text-sm font-medium text-gray-700">Tipo</label> </div>
+      <div class="pl-6">
+        <select id="tipo" name="tipo" disabled
+                class="w-full bg-event-blue text-white px-3 py-2 rounded-lg border-0 focus:ring-2 focus:ring-blue-500 disabled:bg-gray-300 disabled:text-gray-500">
+          <option value="">Selecionar</option> <option value="Show de Rock">Show de Rock</option>
+          <option value="Festival de Comida">Festival de Comida</option>
+          <option value="Stand-up Comedy">Stand-up Comedy</option>
+          <option value="Peça de Teatro">Peça de Teatro</option>
+          <option value="Exposição de Arte">Exposição de Arte</option>
+          <option value="Cinema">Cinema</option>
+          <option value="Concerto">Concerto</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <div class="flex items-center space-x-2 mb-3">
+        <input type="checkbox" id="dateFilter" class="w-4 h-4 text-event-blue border-gray-300 rounded focus:ring-event-blue">
+        <label for="dateFilter" class="text-sm font-medium text-gray-700">Data</label> </div>
+      <div class="pl-6">
+        <select id="dataRange" name="dataRange" disabled
+                class="w-full bg-event-blue text-white px-3 py-2 rounded-lg border-0 focus:ring-2 focus:ring-blue-500 disabled:bg-gray-300 disabled:text-gray-500 mb-2">
+          <option value="">Selecionar período</option> <option value="hoje">Hoje</option>
+          <option value="amanha">Amanhã</option>
+          <option value="esta-semana">Esta semana</option>
+          <option value="proximo-mes">Próximo mês</option>
+          <option value="personalizado">Data específica</option> </select>
+        <input type="date" id="dataEspecifica" name="dataEspecifica" disabled
+               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-event-blue focus:border-transparent disabled:bg-gray-100 hidden"> </div>
+    </div>
+
+    <div class="filter-section">
+      <div class="flex items-center space-x-2 mb-3">
+        <input type="checkbox" id="ratingFilter" class="w-4 h-4 text-event-blue border-gray-300 rounded focus:ring-event-blue">
+        <label for="ratingFilter" class="text-sm font-medium text-gray-700">Classificação Indicativa</label> </div>
+      <div class="pl-6">
+        <select id="classificacao" name="classificacao" disabled
+                class="w-full bg-event-blue text-white px-3 py-2 rounded-lg border-0 focus:ring-2 focus:ring-blue-500 disabled:bg-gray-300 disabled:text-gray-500">
+          <option value="">Selecionar</option> <option value="L">Livre</option>
+          <option value="+10">+10</option>
+          <option value="+14">+14</option>
+          <option value="+16">+16</option>
+          <option value="+18">+18</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <div class="flex items-center space-x-2 mb-3">
+        <input type="checkbox" id="accessibilityFilter" class="w-4 h-4 text-event-blue border-gray-300 rounded focus:ring-event-blue">
+        <label for="accessibilityFilter" class="text-sm font-medium text-gray-700">Acessibilidade</label> </div>
+      <div class="pl-6">
+        <select id="acessibilidade" name="acessibilidade" disabled
+                class="w-full bg-event-blue text-white px-3 py-2 rounded-lg border-0 focus:ring-2 focus:ring-blue-500 disabled:bg-gray-300 disabled:text-gray-500">
+          <option value="">Selecionar</option> <option value="Sim">Acessível</option>
+          <option value="Não">Não acessível</option>
+          <option value="Audiodescrição">Audiodescrição</option>
+          <option value="Libras">Libras</option>
+          <option value="Rampa">Rampa de acesso</option>
+          <option value="Elevador">Elevador</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="space-y-2 pt-4 border-t border-gray-200">
+      <button type="submit" class="w-full bg-event-blue hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+        <i class="fas fa-search mr-2"></i>
+        Aplicar Filtros </button>
+      <button type="button" onclick="resetAllFilters()" class="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+        <i class="fas fa-times mr-2"></i>
+        Limpar Filtros </button>
+    </div>
+  </form>
+
+  <div class="mt-8 pt-6 border-t border-gray-200">
+    <button class="p-2 text-gray-600 hover:text-gray-800 transition-colors" title="Configurações">
+      <i class="fas fa-cog text-xl"></i> </button>
+  </div>
+</aside>
+
+<style>
+/* Estilização personalizada para o "thumb" (indicador) do slider (para WebKit e Mozilla) */
+.slider::-webkit-slider-thumb {
+  appearance: none; /* Remove o estilo padrão do navegador. */
+  height: 20px;
+  width: 20px;
+  border-radius: 50%; /* Torna o thumb circular. */
+  background: #fbbf24; /* Cor de fundo do thumb. */
+  cursor: pointer; /* Muda o cursor para indicar que é clicável/arrastável. */
+  border: 2px solid #ffffff; /* Borda branca. */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Sombra para profundidade. */
+}
+
+.slider::-moz-range-thumb {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #fbbf24;
+  cursor: pointer;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Estilização da trilha do slider (para WebKit e Mozilla) */
+.slider::-webkit-slider-track {
+  height: 8px;
+  border-radius: 4px;
+  background: #e5e7eb; /* Cor de fundo da trilha. */
+}
+
+.slider::-moz-range-track {
+  height: 8px;
+  border-radius: 4px;
+  background: #e5e7eb;
+}
+
+/* Animações e efeitos de hover para as seções de filtro */
+.filter-section {
+  transition: all 0.3s ease; /* Transição suave para todas as propriedades. */
+}
+
+.filter-section:hover {
+  background-color: #f9fafb; /* Cor de fundo ao passar o mouse. */
+  border-radius: 8px; /* Cantos arredondados. */
+  padding: 8px; /* Preenchimento interno. */
+  margin: -8px; /* Ajusta a margem para compensar o padding e manter o layout. */
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // --- Funcionalidade de Checkbox para Habilitar/Desabilitar Filtros ---
+  const filterCheckboxes = document.querySelectorAll('input[type="checkbox"]'); // Seleciona todos os checkboxes.
+  
+  filterCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+      const filterId = this.id.replace('Filter', ''); // Extrai o ID do filtro (ex: 'location' de 'locationFilter').
+      let targetElements = []; // Array para armazenar os elementos de controle de cada filtro.
+      
+      // Mapeia o ID do filtro para os elementos HTML correspondentes.
+      switch(filterId) {
+        case 'location':
+          targetElements = [document.getElementById('distanceRange')]; // Slider de distância.
+          break;
+        case 'type':
+          targetElements = [document.getElementById('tipo')]; // Dropdown de tipo.
+          break;
+        case 'date':
+          targetElements = [document.getElementById('dataRange'), document.getElementById('dataEspecifica')]; // Dropdown de range e input de data específica.
+          break;
+        case 'rating':
+          targetElements = [document.getElementById('classificacao')]; // Dropdown de classificação.
+          break;
+        case 'accessibility':
+          targetElements = [document.getElementById('acessibilidade')]; // Dropdown de acessibilidade.
+          break;
+      }
+      
+      // Habilita/desabilita e limpa os elementos de controle com base no estado do checkbox.
+      targetElements.forEach(element => {
+        if (element) { // Verifica se o elemento existe.
+          element.disabled = !this.checked; // Define o estado 'disabled'.
+          if (!this.checked) { // Se o checkbox for desmarcado.
+            element.value = ''; // Limpa o valor do campo.
+            if (element.type === 'date') { // Se for um input de data, oculta-o também.
+              element.classList.add('hidden');
+            }
+          }
+        }
+      });
+    });
+  });
+
+  // --- Exibição do Valor do Slider de Distância ---
+  const distanceRange = document.getElementById('distanceRange'); // Elemento do slider.
+  const distanceValue = document.getElementById('distanceValue'); // Elemento para exibir o valor.
+  
+  // Atualiza o texto do valor da distância cada vez que o slider é movido.
+  distanceRange.addEventListener('input', function() {
+    distanceValue.textContent = this.value + 'km'; // Exibe o valor atual do slider + "km".
+  });
+
+  // --- Funcionalidade do Seletor de Data ---
+  const dataRange = document.getElementById('dataRange'); // Dropdown de seleção de período.
+  const dataEspecifica = document.getElementById('dataEspecifica'); // Input de data específica.
+  
+  // Oculta/exibe o input de data específica com base na seleção do dropdown.
+  dataRange.addEventListener('change', function() {
+    if (this.value === 'personalizado') { // Se a opção "Data específica" for selecionada.
+      dataEspecifica.classList.remove('hidden'); // Exibe o input de data.
+      dataEspecifica.disabled = false; // Habilita o input de data.
+    } else { // Para outras opções de período.
+      dataEspecifica.classList.add('hidden'); // Oculta o input de data.
+      dataEspecifica.disabled = true; // Desabilita o input de data.
+      dataEspecifica.value = ''; // Limpa o valor.
+    }
+  });
+
+  // --- Submissão do Formulário de Filtros ---
+  document.getElementById('filterForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // Previne o envio padrão do formulário (recarregamento da página).
+    
+    const formData = new FormData(this); // Cria um objeto FormData com os dados do formulário.
+    const filters = {}; // Objeto para armazenar os filtros ativos.
+    
+    // Coleta os valores dos filtros que estão ativos (checkbox marcado).
+    filterCheckboxes.forEach(checkbox => {
+      if (checkbox.checked) { // Se o checkbox está marcado.
+        const filterId = checkbox.id.replace('Filter', ''); // Extrai o ID do filtro.
+        
+        switch(filterId) {
+          case 'location':
+            filters.distance = formData.get('distance'); // Pega o valor do slider de distância.
+            break;
+          case 'type':
+            filters.tipo = formData.get('tipo'); // Pega o valor do tipo.
+            break;
+          case 'date':
+            if (formData.get('dataRange') === 'personalizado') {
+              filters.data = formData.get('dataEspecifica'); // Pega a data específica.
+            } else {
+              filters.dataRange = formData.get('dataRange'); // Pega o range de data (hoje, amanhã, etc.).
+            }
+            break;
+          case 'rating':
+            filters.classificacao = formData.get('classificacao'); // Pega a classificação indicativa.
+            break;
+          case 'accessibility':
+            filters.acessibilidade = formData.get('acessibilidade'); // Pega a acessibilidade.
+            break;
+        }
+      }
+    });
+    
+    console.log('Filtros aplicados:', filters); // Loga os filtros coletados.
+    
+    // Exemplo: Redireciona a página com os filtros como parâmetros de URL.
+    const params = new URLSearchParams(filters); // Converte o objeto de filtros em parâmetros de URL.
+    window.location.href = `${window.location.pathname}?${params.toString()}`; // Redireciona.
+  });
+});
+
+// --- Função para Resetar Todos os Filtros ---
+// Desmarca checkboxes, limpa campos e recarrega a página sem filtros.
+function resetAllFilters() {
+  // Desmarca todos os checkboxes de filtro e dispara o evento 'change' para desabilitar/limpar os campos associados.
+  document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+    checkbox.checked = false;
+    checkbox.dispatchEvent(new Event('change')); // Dispara o evento para atualizar o estado dos campos.
+  });
+  
+  // Reseta todos os valores do formulário.
+  document.getElementById('filterForm').reset();
+  
+  // Reseta o display do valor do slider de distância para o valor padrão.
+  document.getElementById('distanceValue').textContent = '50km';
+  
+  // Oculta o input de data específica.
+  document.getElementById('dataEspecifica').classList.add('hidden');
+  
+  // Redireciona para a URL base da página, limpando quaisquer parâmetros de filtro existentes.
+  window.location.href = window.location.pathname;
+}
+</script>

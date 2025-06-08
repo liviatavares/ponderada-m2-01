@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Inscrição - <%= event.title %></title> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1"> </head>
+<body>
+  <h1>Inscrição para <%= event.title %></h1> <form action="/api/inscricoes" method="POST"> <input type="hidden" name="eventId" value="<%= event.id %>"> <div>
+      <label for="email">Email:</label> <input type="email" id="email" name="email" required> </div>
+
+    <div>
+      <button type="submit">Confirmar Inscrição</button> </div>
+  </form>
+
+  <div>
+    <a href="/event/<%= event.id %>">Voltar para o evento</a> </div>
+</body>
+</html>

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Meus Eventos - Event Calendar</title> <script src="https://cdn.tailwindcss.com"></script> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> <script>
+        // Configuração personalizada do Tailwind CSS, estendendo cores.
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'event-blue': '#2563eb',   // Cor azul personalizada.
+                        'event-yellow': '#fbbf24', // Cor amarela personalizada.
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <header class="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-50">
+        <div class="flex items-center justify-between max-w-7xl mx-auto">
+            <a href="/" class="flex items-center space-x-3">
+            <img src="/assets/logo.png" alt="Logo" class="h-14 w-auto">
+            </a>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <i class="fas fa-bell text-event-yellow text-xl"></i>
+                    <span class="absolute -top-1 -right-1 w-3 h-3 bg-event-blue rounded-full flex items-center justify-center">
+                        <span class="text-xs text-white font-bold">1</span>
+                    </span>
+                </div>
+
+                <button class="bg-event-yellow text-gray-800 px-6 py-2 rounded-lg font-medium">
+                    Meus Eventos
+                </button>
+
+                <a href="/profile" class="bg-event-yellow rounded-lg px-4 py-2 flex items-center space-x-2 hover:bg-yellow-500 transition-colors">
+                    <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                        <i class="fas fa-user text-gray-600"></i>
+                    </div>
+                    <div>
+                        <div class="text-sm font-semibold text-gray-800">Usuário 1</div>
+                        <div class="text-xs text-gray-600">Meu perfil</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-4">Meus Eventos</h1>
+            
+            <div class="flex items-center space-x-6 text-sm">
+                <a href="/" class="text-event-blue hover:text-blue-700 font-medium transition-colors">
+                    <i class="fas fa-home mr-1"></i> Home
+                </a>
+                <span class="text-gray-300">|</span>
+                <a href="/profile" class="text-event-blue hover:text-blue-700 font-medium transition-colors">
+                    <i class="fas fa-user mr-1"></i> Meu Perfil
+                </a>
+                <span class="text-gray-300">|</span>
+                <a href="/logout" class="text-red-600 hover:text-red-700 font-medium transition-colors">
+                    <i class="fas fa-sign-out-alt mr-1"></i> Sair
+                </a>
+            </div>
+        </div>
+
+        <div class="mb-8">
+            <div class="border-b border-gray-200">
+                <nav class="-mb-px flex space-x-8">
+                    <button onclick="showTab('inscricao')" id="tab-inscricoes" class="tab-button active py-2 px-1 border-b-2 border-event-blue font-medium text-sm text-event-blue">
+                        <i class="fas fa-ticket-alt mr-2"></i>
+                        Minhas Inscrições
+                        <span class="ml-2 bg-event-blue text-white text-xs px-2 py-1 rounded-full">
+                            <%= inscricao ? inscricao.length : 0 %>
+                        </span>
+                    </button>
+                    <button onclick="showTab('favoritos')" id="tab-favoritos" class="tab-button py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                        <i class="fas fa-heart mr-2"></i>
+                        Meus Favoritos
+                        <span class="ml-2 bg-gray-400 text-white text-xs px-2 py-1 rounded-full">
+                            <%= favoritos ? favoritos.length : 0 %>
+                        </span>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="inscricoes-content" class="tab-content">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Minhas Inscrições</h2>
+                <p class="text-gray-600">Eventos nos quais você está inscrito</p>
+            </div>
+
+            <% if (inscricao && inscricao.length > 0) { %> <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <% inscricao.forEach((evento, index) => { %> <div class="bg-white border-2 border-event-blue rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+                            <div class="h-40 bg-gray-200 relative flex items-center justify-center">
+                                <div class="w-12 h-12 border-2 border-gray-400 transform rotate-45 absolute"></div>
+                                <div class="w-12 h-12 border-2 border-gray-400 transform -rotate-45 absolute"></div>
+                            </div>
+
+                            <div class="p-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h3 class="text-lg font-bold text-gray-800 truncate"><%= evento.nome_evento %></h3>
+                                    <span class="px-2 py-1 text-xs font-medium rounded-full <%= evento.status === 'Confirmado' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' %>">
+                                        <%= evento.status %>
+                                    </span>
+                                </div>
+
+                                <div class="space-y-2 text-sm text-gray-600 mb-4">
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-calendar w-4"></i>
+                                        <span><%= new Date(evento.data_evento).toLocaleDateString() %></span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-map-marker-alt w-4"></i>
+                                        <span class="truncate"><%= evento.localizacao_evento %></span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-clock w-4"></i>
+                                        <span><%= evento.duracao %></span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-tag w-4"></i>
+                                        <span><%= evento.tipo %></span>
+                                    </div>
+                                </div>
+
+                                <div class="flex space-x-2">
+                                    <a href="/eventos/<%= evento.id %>" class="flex-1 bg-event-blue hover:bg-blue-700 text-white py-2 px-3 rounded-lg text-sm font-medium text-center transition-colors">
+                                        Ver Detalhes
+                                    </a>
+                                    <button onclick="toggleFavorito(<%= evento.id %>)" class="bg-event-yellow hover:bg-yellow-500 text-gray-800 p-2 rounded-lg transition-colors">
+                                        <i class="fas fa-star"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            <% } else { %> <div class="text-center py-12">
+                    <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-ticket-alt text-gray-400 text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-medium text-gray-800 mb-2">Nenhuma inscrição ainda</h3>
+                    <p class="text-gray-600 mb-6">Você ainda não se inscreveu em nenhum evento.</p>
+                    <a href="/" class="bg-event-blue hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors inline-flex items-center">
+                        <i class="fas fa-search mr-2"></i>
+                        Explorar Eventos
+                    </a>
+                </div>
+            <% } %>
+        </div>
+
+        <div id="favoritos-content" class="tab-content hidden">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Meus Favoritos</h2>
+                <p class="text-gray-600">Eventos que você marcou como favoritos</p>
+            </div>
+
+            <% if (favoritos && favoritos.length > 0) { %> <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <% favoritos.forEach((evento, index) => { %> <div class="bg-white border-2 border-event-yellow rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+                            <div class="h-40 bg-gray-200 relative flex items-center justify-center">
+                                <div class="w-12 h-12 border-2 border-gray-400 transform rotate-45 absolute"></div>
+                                <div class="w-12 h-12 border-2 border-gray-400 transform -rotate-45 absolute"></div>
+                            </div>
+
+                            <div class="p-4">
+                                <h3 class="text-lg font-bold text-gray-800 mb-2 truncate"><%= evento.nome_evento %></h3>
+
+                                <div class="space-y-2 text-sm text-gray-600 mb-4">
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-calendar w-4"></i>
+                                        <span><%= new Date(evento.data_evento).toLocaleDateString() %></span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-map-marker-alt w-4"></i>
+                                        <span class="truncate"><%= evento.localizacao_evento %></span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-clock w-4"></i>
+                                        <span><%= evento.duracao %></span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-tag w-4"></i>
+                                        <span><%= evento.tipo %></span>
+                                    </div>
+                                </div>
+
+                                <div class="flex space-x-2">
+                                    <a href="/eventos/<%= evento.id %>" class="flex-1 bg-event-blue hover:bg-blue-700 text-white py-2 px-3 rounded-lg text-sm font-medium text-center transition-colors">
+                                        Ver Detalhes
+                                    </a>
+                                    <button onclick="toggleFavorito(<%= evento.id %>)" class="bg-event-yellow hover:bg-yellow-500 text-gray-800 p-2 rounded-lg transition-colors">
+                                        <i class="fas fa-star"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            <% } else { %> <div class="text-center py-12">
+                    <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-heart text-gray-400 text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-medium text-gray-800 mb-2">Nenhum favorito ainda</h3>
+                    <p class="text-gray-600 mb-6">Você ainda não tem eventos favoritos.</p>
+                    <a href="/" class="bg-event-blue hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors inline-flex items-center">
+                        <i class="fas fa-search mr-2"></i>
+                        Explorar Eventos
+                    </a>
+                </div>
+            <% } %>
+        </div>
+    </main>
+
+    <script>
+        // --- Funcionalidade de Abas (Tabs) ---
+        // Exibe o conteúdo da aba selecionada e atualiza os estilos dos botões das abas.
+        function showTab(tabName) {
+            // Oculta todos os conteúdos das abas.
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+
+            // Remove a classe 'active' e os estilos de ativação de todos os botões de aba.
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active', 'border-event-blue', 'text-event-blue');
+                button.classList.add('border-transparent', 'text-gray-500');
+                
+                // Atualiza a cor do crachá (badge) do contador para cinza.
+                const badge = button.querySelector('span');
+                if (badge) {
+                    badge.classList.remove('bg-event-blue');
+                    badge.classList.add('bg-gray-400');
+                }
+            });
+
+            // Exibe o conteúdo da aba selecionada.
+            document.getElementById(tabName + '-content').classList.remove('hidden');
+
+            // Adiciona a classe 'active' e os estilos de ativação ao botão da aba selecionada.
+            const activeButton = document.getElementById('tab-' + tabName);
+            activeButton.classList.add('active', 'border-event-blue', 'text-event-blue');
+            activeButton.classList.remove('border-transparent', 'text-gray-500');
+            
+            // Atualiza a cor do crachá (badge) do contador da aba ativa para azul.
+            const activeBadge = activeButton.querySelector('span');
+            if (activeBadge) {
+                activeBadge.classList.add('bg-event-blue');
+                activeBadge.classList.remove('bg-gray-400');
+            }
+        }
+
+        // --- Funcionalidade de Favoritar/Desfavoritar Eventos ---
+        // Envia uma requisição à API para alternar o status de favorito de um evento.
+        function toggleFavorito(eventoId) {
+            // Adiciona um estado de carregamento visual ao botão (spinner).
+            const button = event.target.closest('button'); // Encontra o botão clicado.
+            const originalContent = button.innerHTML;      // Salva o conteúdo original do botão.
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; // Altera o botão para um spinner.
+            button.disabled = true; // Desabilita o botão para evitar múltiplos cliques.
+
+            fetch('/api/favoritos', { // Faz uma requisição POST para a API de favoritos.
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ evento_id: eventoId }) // Envia o ID do evento.
+            })
+            .then(response => response.json()) // Processa a resposta JSON.
+            .then(data => {
+                if (data.success) {
+                    showNotification(data.message || 'Favorito atualizado!', 'success'); // Exibe notificação de sucesso.
+                    
+                    // Recarrega a página após um curto atraso para refletir o novo estado.
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                } else {
+                    showNotification(data.message || 'Erro ao atualizar favorito', 'error'); // Exibe notificação de erro.
+                    // Restaura o botão ao estado original em caso de erro.
+                    button.innerHTML = originalContent;
+                    button.disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao favoritar/desfavoritar:', error); // Loga erros de rede/API.
+                showNotification('Erro ao atualizar favorito', 'error'); // Exibe notificação genérica de erro.
+                // Restaura o botão em caso de erro.
+                button.innerHTML = originalContent;
+                button.disabled = false;
+            });
+        }
+
+        // --- Sistema de Notificações Pop-up ---
+        // Exibe notificações temporárias no canto superior direito da tela.
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div'); // Cria o elemento da notificação.
+            // Define classes CSS para estilização e animação (sucesso, erro, info).
+            notification.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg transition-all duration-300 transform translate-x-full ${
+                type === 'success' ? 'bg-green-500 text-white' : 
+                type === 'error' ? 'bg-red-500 text-white' : 
+                'bg-blue-500 text-white'
+            }`;
+            // Define o conteúdo HTML da notificação (ícone e mensagem).
+            notification.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'exclamation-triangle' : 'info'}-circle"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+
+            document.body.appendChild(notification); // Adiciona a notificação ao corpo do documento.
+
+            // Anima a notificação para dentro da tela.
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 100);
+
+            // Anima a notificação para fora da tela e a remove após um tempo.
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000); // Notificação visível por 3 segundos.
+        }
+
+        // --- Inicialização da Página ---
+        // Exibe a aba de "Minhas Inscrições" por padrão ao carregar a página.
+        document.addEventListener('DOMContentLoaded', function() {
+            showTab('inscricoes'); // Chama a função para mostrar a aba inicial.
+        });
+    </script>
+
+    <style>
+        /* Estilos para o botão da aba ativa. */
+        .tab-button.active {
+            border-color: #2563eb !important; /* Borda azul. */
+            color: #2563eb !important; /* Texto azul. */
+        }
+
+        /* Animação de fade-in para o conteúdo das abas. */
+        .tab-content { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Efeitos de sombra ao passar o mouse em cards. */
+        .hover\:shadow-lg:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Animação de rotação para ícones de carregamento (spinners). */
+        .fa-spin { animation: fa-spin 1s infinite linear; }
+        @keyframes fa-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</body>
+</html>

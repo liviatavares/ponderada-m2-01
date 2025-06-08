@@ -56,3 +56,6 @@ describe('User Model', () => {
     expect(isDeleted).toBe(false);
   });
 });
+
+
+// esse arquivo de testes é apenas um template para futuros testes e ainda não foi implementado

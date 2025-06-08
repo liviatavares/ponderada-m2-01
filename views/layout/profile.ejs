@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Meu Perfil - Event Calendar</title> <script src="https://cdn.tailwindcss.com"></script> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> <script>
+        // Configuração personalizada do Tailwind CSS, estendendo cores.
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'event-blue': '#2563eb',   // Cor azul personalizada.
+                        'event-yellow': '#fbbf24', // Cor amarela personalizada.
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <header class="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-50">
+        <div class="flex items-center justify-between max-w-7xl mx-auto">
+            <a href="/" class="flex items-center space-x-3">
+            <img src="/assets/logo.png" alt="Logo" class="h-14 w-auto">
+            </a>
+
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <i class="fas fa-bell text-event-yellow text-xl"></i>
+                    <span class="absolute -top-1 -right-1 w-3 h-3 bg-event-blue rounded-full flex items-center justify-center">
+                        <span class="text-xs text-white font-bold">1</span>
+                    </span>
+                </div>
+
+                <a href="/meus-eventos" class="bg-event-blue hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                    Meus Eventos
+                </a>
+
+                <div class="bg-event-yellow rounded-lg px-4 py-2 flex items-center space-x-2 ring-2 ring-yellow-300">
+                    <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                        <i class="fas fa-user text-gray-600"></i>
+                    </div>
+                    <div>
+                        <div class="text-sm font-semibold text-gray-800"><%= user.nome_usuario %></div> <div class="text-xs text-gray-600">Meu perfil</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-6 py-8">
+        <div class="mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-800 mb-2">Meu Perfil</h1>
+                    <p class="text-gray-600">Gerencie suas informações pessoais e configurações</p>
+                </div>
+                <a href="/" class="inline-flex items-center text-event-blue hover:text-blue-700 font-medium transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Voltar para Home
+                </a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div class="text-center mb-6">
+                        <div class="w-24 h-24 bg-gradient-to-br from-event-blue to-event-yellow rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-user text-white text-3xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800"><%= user.nome_usuario %></h3> <p class="text-gray-600"><%= user.email %></p> </div>
+
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-ticket-alt text-event-blue"></i>
+                                <span class="text-sm font-medium text-gray-700">Eventos Inscritos</span>
+                            </div>
+                            <span class="text-lg font-bold text-event-blue">5</span> </div>
+
+                        <div class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-heart text-event-yellow"></i>
+                                <span class="text-sm font-medium text-gray-700">Favoritos</span>
+                            </div>
+                            <span class="text-lg font-bold text-event-yellow">3</span> </div>
+
+                        <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-calendar-check text-green-600"></i>
+                                <span class="text-sm font-medium text-gray-700">Participações</span>
+                            </div>
+                            <span class="text-lg font-bold text-green-600">12</span> </div>
+                    </div>
+
+                    <div class="mt-6 pt-6 border-t border-gray-200">
+                        <div class="space-y-2">
+                            <a href="/meus-eventos" class="w-full bg-event-blue hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-medium transition-colors flex items-center justify-center">
+                                <i class="fas fa-calendar mr-2"></i>
+                                Meus Eventos
+                            </a>
+                            <a href="/logout" class="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg font-medium transition-colors flex items-center justify-center">
+                                <i class="fas fa-sign-out-alt mr-2"></i>
+                                Sair
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-2 space-y-8">
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-xl font-bold text-gray-800">Informações Pessoais</h2>
+                            <button onclick="toggleEditMode()" id="editBtn" class="text-event-blue hover:text-blue-700 font-medium transition-colors">
+                                <i class="fas fa-edit mr-1"></i>
+                                Editar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="p-6">
+                        <form id="profileForm" action="/profile/update" method="POST">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="nome_usuario" class="block text-sm font-medium text-gray-700 mb-2">Nome Completo</label>
+                                    <input type="text" id="nome_usuario" name="nome_usuario" value="<%= user.nome_usuario %>" 
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-event-blue focus:border-transparent transition-colors" 
+                                           readonly>
+                                </div>
+
+                                <div>
+                                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                    <input type="email" id="email" name="email" value="<%= user.email %>" 
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-event-blue focus:border-transparent transition-colors" 
+                                           readonly>
+                                </div>
+
+                                <div>
+                                    <label for="data_nascimento" class="block text-sm font-medium text-gray-700 mb-2">Data de Nascimento</label>
+                                    <input type="date" id="data_nascimento" name="data_nascimento" value="<%= user.data_nascimento ? new Date(user.data_nascimento).toISOString().split('T')[0] : '' %>" 
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-event-blue focus:border-transparent transition-colors" 
+                                           readonly>
+                                </div>
+
+                                <div>
+                                    <label for="localizacao" class="block text-sm font-medium text-gray-700 mb-2">Localização</label>
+                                    <input type="text" id="localizacao" name="localizacao" value="<%= user.localizacao || '' %>" 
+                                           placeholder="Cidade, Estado" 
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-event-blue focus:border-transparent transition-colors" 
+                                           readonly>
+                                </div>
+                            </div>
+
+                            <div id="saveSection" class="mt-6 hidden">
+                                <div class="flex space-x-4">
+                                    <button type="submit" class="bg-event-blue hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                                        <i class="fas fa-save mr-2"></i>
+                                        Salvar Alterações
+                                    </button>
+                                    <button type="button" onclick="cancelEdit()" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                                        <i class="fas fa-times mr-2"></i>
+                                        Cancelar
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h2 class="text-xl font-bold text-gray-800">Alterar Senha</h2>
+                        <p class="text-sm text-gray-600 mt-1">Mantenha sua conta segura com uma senha forte</p>
+                    </div>
+
+                    <div class="p-6">
+                        <form id="passwordForm" action="/profile/change-password" method="POST">
+                            <div class="space-y-6">
+                                <div>
+                                    <label for="current_password" class="block text-sm font-medium text-gray-700 mb-2">Senha Atual</label>
+                                    <div class="relative">
+                                        <input type="password" id="current_password" name="current_password" required 
+                                               class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-event-blue focus:border-transparent transition-colors">
+                                        <button type="button" onclick="togglePassword('current_password')" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                            <i class="fas fa-eye text-gray-400 hover:text-gray-600"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label for="new_password" class="block text-sm font-medium text-gray-700 mb-2">Nova Senha</label>
+                                    <div class="relative">
+                                        <input type="password" id="new_password" name="new_password" required 
+                                               class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-event-blue focus:border-transparent transition-colors">
+                                        <button type="button" onclick="togglePassword('new_password')" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                            <i class="fas fa-eye text-gray-400 hover:text-gray-600"></i>
+                                        </button>
+                                    </div>
+                                    <div class="mt-2">
+                                        <div class="text-xs text-gray-500">
+                                            A senha deve ter pelo menos 8 caracteres
+                                        </div>
+                                        <div id="passwordStrength" class="mt-1 h-1 bg-gray-200 rounded-full overflow-hidden">
+                                            <div id="strengthBar" class="h-full transition-all duration-300"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-2">Confirmar Nova Senha</label>
+                                    <div class="relative">
+                                        <input type="password" id="confirm_password" name="confirm_password" required 
+                                               class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-event-blue focus:border-transparent transition-colors">
+                                        <button type="button" onclick="togglePassword('confirm_password')" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                            <i class="fas fa-eye text-gray-400 hover:text-gray-600"></i>
+                                        </button>
+                                    </div>
+                                    <div id="passwordMatch" class="mt-1 text-xs hidden"></div>
+                                </div>
+
+                                <div class="pt-4">
+                                    <button type="submit" id="changePasswordBtn" class="bg-event-yellow hover:bg-yellow-500 text-gray-800 px-6 py-2 rounded-lg font-medium transition-colors">
+                                        <i class="fas fa-key mr-2"></i>
+                                        Alterar Senha
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h2 class="text-xl font-bold text-gray-800">Configurações da Conta</h2>
+                        <p class="text-sm text-gray-600 mt-1">Gerencie suas preferências e notificações</p>
+                    </div>
+
+                    <div class="p-6">
+                        <div class="space-y-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="text-sm font-medium text-gray-800">Notificações por Email</h3>
+                                    <p class="text-xs text-gray-600">Receba atualizações sobre seus eventos</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer" checked> <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-event-blue"></div>
+                                </label>
+                            </div>
+
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="text-sm font-medium text-gray-800">Notificações Push</h3>
+                                    <p class="text-xs text-gray-600">Receba lembretes de eventos próximos</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer"> <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-event-blue"></div>
+                                </label>
+                            </div>
+
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="text-sm font-medium text-gray-800">Emails Promocionais</h3>
+                                    <p class="text-xs text-gray-600">Receba ofertas e novidades</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer" checked> <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-event-blue"></div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // --- Funcionalidade de Modo de Edição do Perfil ---
+        let isEditMode = false;     // Flag para controlar se está no modo de edição.
+        let originalValues = {};    // Objeto para armazenar os valores originais dos campos.
+
+        // Alterna entre o modo de visualização e edição das informações pessoais.
+        function toggleEditMode() {
+            const inputs = document.querySelectorAll('#profileForm input'); // Todos os inputs do formulário de perfil.
+            const editBtn = document.getElementById('editBtn');           // Botão "Editar/Cancelar".
+            const saveSection = document.getElementById('saveSection');   // Seção com botões "Salvar" e "Cancelar".
+
+            if (!isEditMode) { // Entra no modo de edição.
+                // Salva os valores atuais e torna os inputs editáveis.
+                inputs.forEach(input => {
+                    originalValues[input.name] = input.value; // Armazena o valor original.
+                    input.removeAttribute('readonly');         // Remove o atributo 'readonly'.
+                    input.classList.add('bg-blue-50');         // Adiciona um fundo azul claro para indicar edição.
+                });
+
+                editBtn.innerHTML = '<i class="fas fa-times mr-1"></i> Cancelar'; // Muda o texto e ícone do botão.
+                saveSection.classList.remove('hidden'); // Mostra a seção de salvar/cancelar.
+                isEditMode = true; // Define a flag como true.
+            } else { // Sai do modo de edição.
+                cancelEdit(); // Chama a função para cancelar e restaurar os valores.
+            }
+        }
+
+        // Cancela o modo de edição e restaura os valores originais.
+        function cancelEdit() {
+            const inputs = document.querySelectorAll('#profileForm input');
+            const editBtn = document.getElementById('editBtn');
+            const saveSection = document.getElementById('saveSection');
+
+            // Restaura os valores originais e define os inputs como somente leitura.
+            inputs.forEach(input => {
+                input.value = originalValues[input.name] || ''; // Restaura o valor.
+                input.setAttribute('readonly', true);          // Torna somente leitura.
+                input.classList.remove('bg-blue-50');          // Remove o fundo azul.
+            });
+
+            editBtn.innerHTML = '<i class="fas fa-edit mr-1"></i> Editar'; // Restaura o texto e ícone do botão.
+            saveSection.classList.add('hidden'); // Oculta a seção de salvar/cancelar.
+            isEditMode = false; // Define a flag como false.
+        }
+
+        // --- Funcionalidade de Alternar Visibilidade da Senha ---
+        // Altera o tipo do input de senha entre 'password' e 'text' e muda o ícone.
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId); // Campo de senha.
+            const icon = field.nextElementSibling.querySelector('i'); // Ícone de olho.
+
+            if (field.type === 'password') {
+                field.type = 'text'; // Altera para texto visível.
+                icon.classList.remove('fa-eye'); // Troca o ícone para "olho riscado".
+                icon.classList.add('fa-eye-slash');
+            } else {
+                field.type = 'password'; // Altera para senha oculta.
+                icon.classList.remove('fa-eye-slash'); // Troca o ícone para "olho".
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        // --- Verificador de Força da Senha ---
+        // Avalia a força da senha digitada e atualiza uma barra de progresso visual.
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            const strengthBar = document.getElementById('strengthBar'); // Barra de progresso.
+
+            // Adiciona pontos de força com base em critérios.
+            if (password.length >= 8) strength += 25; // Pelo menos 8 caracteres.
+            if (/[a-z]/.test(password)) strength += 25; // Letras minúsculas.
+            if (/[A-Z]/.test(password)) strength += 25; // Letras maiúsculas.
+            if (/[0-9]/.test(password)) strength += 25; // Números.
+
+            strengthBar.style.width = strength + '%'; // Atualiza a largura da barra.
+
+            // Muda a cor da barra com base na força.
+            if (strength < 50) {
+                strengthBar.className = 'h-full transition-all duration-300 bg-red-500'; // Fraca (vermelho).
+            } else if (strength < 75) {
+                strengthBar.className = 'h-full transition-all duration-300 bg-yellow-500'; // Média (amarelo).
+            } else {
+                strengthBar.className = 'h-full transition-all duration-300 bg-green-500'; // Forte (verde).
+            }
+        }
+
+        // --- Verificador de Correspondência de Senhas ---
+        // Compara a nova senha com a confirmação e exibe uma mensagem de correspondência.
+        function checkPasswordMatch() {
+            const newPassword = document.getElementById('new_password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            const matchDiv = document.getElementById('passwordMatch'); // Div para exibir a mensagem.
+
+            if (confirmPassword.length > 0) { // Só verifica se há algo na confirmação.
+                if (newPassword === confirmPassword) {
+                    matchDiv.textContent = 'Senhas coincidem';
+                    matchDiv.className = 'mt-1 text-xs text-green-600'; // Mensagem verde de sucesso.
+                    matchDiv.classList.remove('hidden');
+                } else {
+                    matchDiv.textContent = 'Senhas não coincidem';
+                    matchDiv.className = 'mt-1 text-xs text-red-600'; // Mensagem vermelha de erro.
+                    matchDiv.classList.remove('hidden');
+                }
+            } else {
+                matchDiv.classList.add('hidden'); // Oculta a mensagem se a confirmação estiver vazia.
+            }
+        }
+
+        // --- Gerenciador de Submissão do Formulário de Perfil ---
+        // Simula o envio de dados do perfil para uma API e exibe feedback.
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Previne o envio padrão do formulário.
+            
+            // Adiciona um estado de carregamento ao botão.
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Salvando...';
+            submitBtn.disabled = true;
+
+            // Simula uma chamada de API (substitua por uma chamada real).
+            setTimeout(() => {
+                showNotification('Perfil atualizado com sucesso!', 'success'); // Exibe notificação.
+                submitBtn.innerHTML = originalText; // Restaura o botão.
+                submitBtn.disabled = false;
+                cancelEdit(); // Sai do modo de edição.
+            }, 1500); // Atraso de 1.5 segundos.
+        });
+
+        // --- Gerenciador de Submissão do Formulário de Senha ---
+        // Valida as senhas, simula envio para API e exibe feedback.
+        document.getElementById('passwordForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Previne o envio padrão.
+            
+            const newPassword = document.getElementById('new_password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+
+            // Validações de senha.
+            if (newPassword !== confirmPassword) {
+                showNotification('As senhas não coincidem', 'error');
+                return;
+            }
+            if (newPassword.length < 8) {
+                showNotification('A senha deve ter pelo menos 8 caracteres', 'error');
+                return;
+            }
+
+            // Adiciona um estado de carregamento ao botão.
+            const submitBtn = document.getElementById('changePasswordBtn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Alterando...';
+            submitBtn.disabled = true;
+
+            // Simula uma chamada de API (substitua por uma chamada real).
+            setTimeout(() => {
+                showNotification('Senha alterada com sucesso!', 'success');
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                this.reset(); // Limpa o formulário.
+                document.getElementById('passwordStrength').querySelector('#strengthBar').style.width = '0%'; // Reseta a barra de força.
+            }, 1500);
+        });
+
+        // --- Listeners de Eventos para Validação em Tempo Real ---
+        // Chama a função de verificação de força da senha ao digitar na nova senha.
+        document.getElementById('new_password').addEventListener('input', function() {
+            checkPasswordStrength(this.value);
+        });
+        // Chama a função de verificação de correspondência ao digitar na confirmação.
+        document.getElementById('confirm_password').addEventListener('input', checkPasswordMatch);
+
+        // --- Sistema de Notificações Pop-up ---
+        // Exibe notificações temporárias no canto superior direito da tela.
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div'); // Cria o elemento da notificação.
+            // Define classes CSS para estilização e animação (sucesso, erro, info).
+            notification.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg transition-all duration-300 transform translate-x-full ${
+                type === 'success' ? 'bg-green-500 text-white' : 
+                type === 'error' ? 'bg-red-500 text-white' : 
+                'bg-blue-500 text-white'
+            }`;
+            // Define o conteúdo HTML da notificação (ícone e mensagem).
+            notification.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'exclamation-triangle' : 'info'}-circle"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+
+            document.body.appendChild(notification); // Adiciona a notificação ao corpo do documento.
+
+            // Anima a notificação para dentro da tela.
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 100);
+
+            // Anima a notificação para fora da tela e a remove após um tempo.
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000); // Notificação visível por 3 segundos.
+        }
+    </script>
+
+
+    <style>
+        /* Define uma transição padrão para propriedades de cor. */
+        .transition-colors {
+            transition-property: color, background-color, border-color;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 150ms;
+        }
+
+        /* Animação de rotação para ícones de carregamento (spinners). */
+        .fa-spin {
+            animation: fa-spin 1s infinite linear;
+        }
+        @keyframes fa-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Estilos para o estado de foco dos inputs do formulário. */
+        input:focus {
+            outline: none; /* Remove o contorno padrão. */
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); /* Adiciona uma sombra de anel. */
+        }
+
+        /* Estilo para a animação do toggle switch (quando o checkbox está marcado). */
+        .peer:checked ~ div {
+            background-color: #2563eb; /* Muda a cor de fundo do "trilho" do switch. */
+        }
+    </style>
+</body>
+</html>

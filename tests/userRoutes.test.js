@@ -59,3 +59,6 @@ describe('User Routes', () => {
     expect(res.body).toEqual({ message: 'Usuário deletado' });
   });
 });
+
+
+// esse arquivo de testes é apenas um template para futuros testes e ainda não foi implementado

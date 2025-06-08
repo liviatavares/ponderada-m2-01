@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Eventos</title> </head>
+<body>
+    <nav> <div> <a href="/">Home</a> <% if (typeof user !== 'undefined' && user) { %> <a href="/meus-eventos">Meus Eventos</a> <% } %>
+            <div> <% if (typeof user !== 'undefined' && user) { %> <span>Olá, <%= user.nome_usuario %></span> <a href="/logout">Sair</a> <% } else { %> <a href="/login">Login</a> <a href="/register">Cadastrar</a> <% } %>
+            </div>
+        </div>
+    </nav>
+</body>
+</html>

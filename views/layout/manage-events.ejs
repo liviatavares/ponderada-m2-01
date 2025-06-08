@@ -1,0 +1,245 @@
+<%- include('../partials/header') %> <div>
+    <h2>Gerenciar Eventos</h2> <div>
+        <h3>Adicionar Novo Evento</h3>
+        <form id="addEventForm"> <div>
+                <label for="nome_evento">Nome do Evento:</label>
+                <input type="text" id="nome_evento" name="nome_evento" required> </div>
+
+            <div>
+                <label for="tipo">Tipo:</label>
+                <select id="tipo" name="tipo" required> <option value="Show de Rock">Show de Rock</option>
+                    <option value="Festival de Comida">Festival de Comida</option>
+                    <option value="Stand-up Comedy">Stand-up Comedy</option>
+                    <option value="Peça de Teatro">Peça de Teatro</option>
+                    <option value="Exposição de Arte">Exposição de Arte</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="localizacao_evento">Localização:</label>
+                <input type="text" id="localizacao_evento" name="localizacao_evento" required> </div>
+
+            <div>
+                <label for="data_evento">Data:</label>
+                <input type="date" id="data_evento" name="data_evento" required> </div>
+
+            <div>
+                <label for="duracao">Duração:</label>
+                <input type="time" id="duracao" name="duracao" required> </div>
+
+            <div>
+                <label for="classificacao_indicativa">Classificação Indicativa:</label>
+                <select id="classificacao_indicativa" name="classificacao_indicativa" required> <option value="L">Livre</option>
+                    <option value="+10">+10</option>
+                    <option value="+14">+14</option>
+                    <option value="+16">+16</option>
+                    <option value="+18">+18</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="acessibilidade">Acessibilidade:</label>
+                <select id="acessibilidade" name="acessibilidade" required> <option value="Sim">Sim</option>
+                    <option value="Não">Não</option>
+                </select>
+            </div>
+
+            <button type="submit">Adicionar Evento</button> </form>
+    </div>
+
+    <div>
+        <h3>Eventos Existentes</h3>
+        <div id="eventsList">
+            <% eventos.forEach(evento => { %> <div class="event-item" data-id="<%= evento.id %>"> <h4><%= evento.nome_evento %></h4> <p>Data: <%= new Date(evento.data_evento).toLocaleDateString() %></p> <p>Local: <%= evento.localizacao_evento %></p> <p>Tipo: <%= evento.tipo %></p> <div class="event-actions">
+                        <button onclick="editEvent(<%= evento.id %>)">Editar</button> <button onclick="deleteEvent(<%= evento.id %>)">Excluir</button> </div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+</div>
+
+<div id="editModal" style="display: none;">
+    <div>
+        <h3>Editar Evento</h3>
+        <form id="editEventForm"> <input type="hidden" id="edit_event_id"> <div>
+                <label for="edit_nome_evento">Nome do Evento:</label>
+                <input type="text" id="edit_nome_evento" name="nome_evento" required>
+            </div>
+            <div>
+                <label for="edit_tipo">Tipo:</label>
+                <select id="edit_tipo" name="tipo" required>
+                    <option value="Show de Rock">Show de Rock</option>
+                    <option value="Festival de Comida">Festival de Comida</option>
+                    <option value="Stand-up Comedy">Stand-up Comedy</option>
+                    <option value="Peça de Teatro">Peça de Teatro</option>
+                    <option value="Exposição de Arte">Exposição de Arte</option>
+                </select>
+            </div>
+            <div>
+                <label for="edit_localizacao_evento">Localização:</label>
+                <input type="text" id="edit_localizacao_evento" name="localizacao_evento" required>
+            </div>
+            <div>
+                <label for="edit_data_evento">Data:</label>
+                <input type="date" id="edit_data_evento" name="data_evento" required>
+            </div>
+            <div>
+                <label for="edit_duracao">Duração:</label>
+                <input type="time" id="edit_duracao" name="duracao" required>
+            </div>
+            <div>
+                <label for="edit_classificacao_indicativa">Classificação Indicativa:</label>
+                <select id="edit_classificacao_indicativa" name="classificacao_indicativa" required>
+                    <option value="L">Livre</option>
+                    <option value="+10">+10</option>
+                    <option value="+14">+14</option>
+                    <option value="+16">+16</option>
+                    <option value="+18">+18</option>
+                </select>
+            </div>
+            <div>
+                <label for="edit_acessibilidade">Acessibilidade:</label>
+                <select id="edit_acessibilidade" name="acessibilidade" required>
+                    <option value="Sim">Sim</option>
+                    <option value="Não">Não</option>
+                </select>
+            </div>
+
+            <button type="submit">Salvar Alterações</button> <button type="button" onclick="closeEditModal()">Cancelar</button> </form>
+    </div>
+</div>
+
+<script>
+    // --- Lógica para Adicionar Evento (via API) ---
+    document.getElementById('addEventForm').addEventListener('submit', async function(e) {
+        e.preventDefault(); // Previne o recarregamento padrão da página ao submeter o formulário.
+        
+        // Coleta os dados do formulário para um objeto JavaScript.
+        const formData = {
+            nome_evento: document.getElementById('nome_evento').value,
+            tipo: document.getElementById('tipo').value,
+            localizacao_evento: document.getElementById('localizacao_evento').value,
+            data_evento: document.getElementById('data_evento').value,
+            duracao: document.getElementById('duracao').value,
+            classificacao_indicativa: document.getElementById('classificacao_indicativa').value,
+            acessibilidade: document.getElementById('acessibilidade').value
+        };
+
+        try {
+            // Envia os dados do novo evento para a API usando uma requisição POST.
+            const response = await fetch('/api/eventos', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }, // Define o tipo de conteúdo como JSON.
+                body: JSON.stringify(formData) // Converte o objeto para JSON e envia no corpo da requisição.
+            });
+
+            const data = await response.json(); // Analisa a resposta JSON da API.
+            
+            if (data.success) { // Verifica se a operação foi bem-sucedida (baseado na resposta da API).
+                alert('Evento adicionado com sucesso!'); // Exibe mensagem de sucesso.
+                window.location.reload(); // Recarrega a página para atualizar a lista de eventos.
+            } else {
+                alert(data.message || 'Erro ao adicionar evento'); // Exibe mensagem de erro da API ou genérica.
+            }
+        } catch (error) {
+            console.error('Error:', error); // Loga erros de rede ou de processamento.
+            alert('Erro ao adicionar evento'); // Alerta um erro genérico.
+        }
+    });
+
+    // --- Lógica para Editar Evento (Abrir Modal e Preencher Dados) ---
+    async function editEvent(id) {
+        try {
+            // Busca os detalhes do evento específico da API.
+            const response = await fetch(`/api/eventos/${id}`);
+            const evento = await response.json(); // Pega os dados do evento.
+            
+            // Preenche o formulário do modal de edição com os dados do evento.
+            document.getElementById('edit_event_id').value = evento.id;
+            document.getElementById('edit_nome_evento').value = evento.nome_evento;
+            document.getElementById('edit_tipo').value = evento.tipo;
+            document.getElementById('edit_localizacao_evento').value = evento.localizacao_evento;
+            document.getElementById('edit_data_evento').value = evento.data_evento;
+            document.getElementById('edit_duracao').value = evento.duracao;
+            document.getElementById('edit_classificacao_indicativa').value = evento.classificacao_indicativa;
+            document.getElementById('edit_acessibilidade').value = evento.acessibilidade;
+            
+            document.getElementById('editModal').style.display = 'block'; // Exibe o modal de edição.
+        } catch (error) {
+            console.error('Error:', error); // Loga erro.
+            alert('Erro ao carregar dados do evento'); // Alerta erro.
+        }
+    }
+
+    // --- Lógica para Atualizar Evento (via API) ---
+    document.getElementById('editEventForm').addEventListener('submit', async function(e) {
+        e.preventDefault(); // Previne o recarregamento da página.
+        
+        const id = document.getElementById('edit_event_id').value; // Obtém o ID do evento a ser atualizado.
+        // Coleta os dados atualizados do formulário.
+        const formData = {
+            nome_evento: document.getElementById('edit_nome_evento').value,
+            tipo: document.getElementById('edit_tipo').value,
+            localizacao_evento: document.getElementById('edit_localizacao_evento').value,
+            data_evento: document.getElementById('edit_data_evento').value,
+            duracao: document.getElementById('edit_duracao').value,
+            classificacao_indicativa: document.getElementById('edit_classificacao_indicativa').value,
+            acessibilidade: document.getElementById('edit_acessibilidade').value
+        };
+
+        try {
+            // Envia os dados atualizados para a API usando uma requisição PUT.
+            const response = await fetch(`/api/eventos/${id}`, {
+                method: 'PUT', // Método HTTP para atualização.
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await response.json(); // Analisa a resposta.
+            
+            if (data.success) {
+                alert('Evento atualizado com sucesso!');
+                window.location.reload(); // Recarrega a página para exibir as alterações.
+            } else {
+                alert(data.message || 'Erro ao atualizar evento');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Erro ao atualizar evento');
+        }
+    });
+
+    // --- Lógica para Excluir Evento (via API) ---
+    async function deleteEvent(id) {
+        // Pede confirmação antes de excluir.
+        if (!confirm('Tem certeza que deseja excluir este evento?')) {
+            return; // Aborta se o usuário cancelar.
+        }
+
+        try {
+            // Envia uma requisição DELETE para a API para remover o evento.
+            const response = await fetch(`/api/eventos/${id}`, {
+                method: 'DELETE' // Método HTTP para exclusão.
+            });
+
+            const data = await response.json(); // Analisa a resposta.
+            
+            if (data.success) {
+                alert('Evento excluído com sucesso!');
+                window.location.reload(); // Recarrega a página.
+            } else {
+                alert(data.message || 'Erro ao excluir evento');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Erro ao excluir evento');
+        }
+    }
+
+    // --- Lógica para Fechar o Modal de Edição ---
+    function closeEditModal() {
+        document.getElementById('editModal').style.display = 'none'; // Oculta o modal de edição.
+    }
+</script>
+
+<%- include('../partials/footer') %> ```

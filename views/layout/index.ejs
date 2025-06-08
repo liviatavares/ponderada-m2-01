@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Calendar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'event-blue': '#2563eb',
+                        'event-yellow': '#fbbf24',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <header class="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-50">
+        <div class="flex items-center justify-between max-w-7xl mx-auto">
+            <!-- Logo -->
+            <a href="/" class="flex items-center space-x-3">
+            <img src="/assets/logo.png" alt="Logo" class="h-14 w-auto">
+            </a>
+            <!-- Right Section -->
+            <div class="flex items-center space-x-4">
+                <% if (user) { %>
+                    <!-- Notification Bell -->
+                    <div class="relative">
+                        <i class="fas fa-bell text-event-yellow text-xl"></i>
+                        <span class="absolute -top-1 -right-1 w-3 h-3 bg-event-blue rounded-full flex items-center justify-center">
+                            <span class="text-xs text-white font-bold">1</span>
+                        </span>
+                    </div>
+
+                    <!-- Meus Eventos Button -->
+                    <a href="/meus-eventos" class="bg-event-blue hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors inline-block text-center">Meus Eventos</a>
+
+                    <!-- User Profile -->
+                    <a href="/profile" class="bg-event-yellow rounded-lg px-4 py-2 flex items-center space-x-2 hover:bg-yellow-500 transition-colors">
+                        <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-gray-600"></i>
+                        </div>
+                        <div>
+                            <div class="text-sm font-semibold text-gray-800"><%= user.nome_usuario %></div>
+                            <div class="text-xs text-gray-600">Meu perfil</div>
+                        </div>
+                    </a>
+                <% } else { %>
+                    <a href="/login" class="bg-event-blue hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors inline-block text-center">Login</a>
+                    <a href="/register" class="border-2 border-event-yellow text-event-yellow hover:bg-yellow-50 px-6 py-2 rounded-lg font-medium transition-colors inline-block text-center">Registrar</a>
+                <% } %>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex max-w-7xl mx-auto">
+        <!-- Sidebar -->
+        <aside class="w-80 bg-white border-r border-gray-200 p-6 min-h-screen">
+            <div class="space-y-6">
+                <h2 class="text-xl font-bold text-gray-800">Filtros</h2>
+
+                <form id="filterForm" class="space-y-6">
+                    <!-- Tipo Filter -->
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-2">
+                            <input type="checkbox" id="typeFilter" class="w-4 h-4 text-event-blue">
+                            <label for="typeFilter" class="text-sm font-medium text-gray-700">Tipo</label>
+                        </div>
+                        <select id="tipo" name="tipo" class="w-full bg-event-blue text-white px-3 py-2 rounded-lg border-0 focus:ring-2 focus:ring-blue-500">
+                            <option value="">Selecionar</option>
+                            <option value="Show">Show</option>
+                            <option value="Teatro">Teatro</option>
+                            <option value="Cinema">Cinema</option>
+                            <option value="Exposição">Exposição</option>
+                            <option value="Festival">Festival</option>
+                        </select>
+                    </div>
+
+                    <!-- Classificação Filter -->
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-2">
+                            <input type="checkbox" id="ratingFilter" class="w-4 h-4 text-event-blue">
+                            <label for="ratingFilter" class="text-sm font-medium text-gray-700">Classificação</label>
+                        </div>
+                        <select id="classificacao_indicativa" name="classificacao_indicativa" class="w-full bg-event-blue text-white px-3 py-2 rounded-lg border-0 focus:ring-2 focus:ring-blue-500">
+                            <option value="">Selecionar</option>
+                            <option value="Livre">Livre</option>
+                            <option value="10">+10</option>
+                            <option value="12">+12</option>
+                            <option value="14">+14</option>
+                            <option value="16">+16</option>
+                            <option value="18">+18</option>
+                        </select>
+                    </div>
+
+                    <!-- Acessibilidade Filter -->
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-2">
+                            <input type="checkbox" id="accessibilityFilter" class="w-4 h-4 text-event-blue">
+                            <label for="accessibilityFilter" class="text-sm font-medium text-gray-700">Acessibilidade</label>
+                        </div>
+                        <select id="acessibilidade" name="acessibilidade" class="w-full bg-event-blue text-white px-3 py-2 rounded-lg border-0 focus:ring-2 focus:ring-blue-500">
+                            <option value="">Selecionar</option>
+                            <option value="Sim">Sim</option>
+                           <option value="Não">Não</option>
+                        </select>
+                    </div>
+
+                    <!-- Filter Buttons -->
+                    <div class="space-y-2 pt-4">
+                        <button type="submit" class="w-full bg-event-blue hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+                            <i class="fas fa-search mr-2"></i>
+                            Filtrar Eventos
+                        </button>
+                        <button type="button" onclick="resetFilters()" class="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+                            <i class="fas fa-times mr-2"></i>
+                            Limpar Filtros
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Settings -->
+            <div class="mt-8 pt-6 border-t border-gray-200">
+                <button class="p-2 text-gray-600 hover:text-gray-800 transition-colors">
+                    <i class="fas fa-cog text-xl"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+            <div class="mb-6">
+                <h1 class="text-3xl font-bold text-gray-800">Eventos Disponíveis</h1>
+                <p class="text-gray-600 mt-1">
+                    <% if (eventos && eventos.length > 0) { %>
+                        <%= eventos.length %> evento<%= eventos.length > 1 ? 's' : '' %> encontrado<%= eventos.length > 1 ? 's' : '' %>
+                    <% } else { %>
+                        Nenhum evento encontrado
+                    <% } %>
+                </p>
+            </div>
+
+            <!-- Events Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <% if (eventos && eventos.length > 0) { %>
+                    <% eventos.forEach((evento, index) => { %>
+                        <div class="event-card bg-white border-2 <%= index % 2 === 0 ? 'border-event-yellow' : 'border-event-blue' %> rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                            <!-- Event Image Placeholder -->
+                            <div class="h-48 bg-gray-200 relative flex items-center justify-center">
+                                <div class="w-16 h-16 border-2 border-gray-400 transform rotate-45 absolute"></div>
+                                <div class="w-16 h-16 border-2 border-gray-400 transform -rotate-45 absolute"></div>
+                            </div>
+
+                            <!-- Event Content -->
+                            <div class="p-6">
+                                <div class="flex items-start justify-between mb-3">
+                                    <h3 class="text-lg font-bold text-gray-800 line-clamp-2"><%= evento.nome_evento %></h3>
+                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-600 ml-2 flex-shrink-0">
+                                        <%= evento.classificacao_indicativa %>
+                                    </span>
+                                </div>
+
+                                <div class="space-y-2 text-sm text-gray-600 mb-4">
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-calendar w-4 text-event-blue"></i>
+                                        <span><%= evento.data_evento %></span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-map-marker-alt w-4 text-event-blue"></i>
+                                        <span class="truncate"><%= evento.localizacao_evento %></span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-tag w-4 text-event-blue"></i>
+                                        <span><%= evento.tipo %></span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-clock w-4 text-event-blue"></i>
+                                        <span><%= evento.duracao %></span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-wheelchair w-4 text-event-blue"></i>
+                                        <span><%= evento.acessibilidade %></span>
+                                    </div>
+                                </div>
+
+                                <div class="flex space-x-2">
+                                    <a href="/eventos/<%= evento.id %>" class="flex-1 bg-event-blue hover:bg-blue-700 text-white py-2 px-3 rounded-lg text-sm font-medium text-center transition-colors">
+                                        Ver Detalhes
+                                    </a>
+                                    <% if (user) { %>
+                                    <button onclick="toggleFavorite(<%= evento.id %>)" class="bg-event-yellow hover:bg-yellow-500 text-gray-800 p-2 rounded-lg transition-colors">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <!-- Empty State -->
+                    <div class="col-span-3 text-center py-16">
+                        <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-calendar-times text-gray-400 text-3xl"></i>
+                        </div>
+                        <h3 class="text-xl font-medium text-gray-800 mb-2">Nenhum evento encontrado</h3>
+                        <p class="text-gray-600 mb-6">Tente ajustar os filtros ou explorar outros eventos.</p>
+                        <button onclick="resetFilters()" class="bg-event-blue hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors inline-flex items-center">
+                            <i class="fas fa-search mr-2"></i>
+                            Ver Todos os Eventos
+                        </button>
+                    </div>
+                <% } %>
+            </div>
+        </main>
+    </div>
+
+    <style>
+        /* Custom animations */
+        .event-card {
+            transition: all 0.3s ease;
+        }
+
+        .event-card:hover {
+            transform: translateY(-4px);
+        }
+
+        /* Line clamp for text truncation */
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+<!-- Substitua o script no index.ejs por: -->
+<script>
+// Filter checkbox functionality
+document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+        const fieldMap = {
+            'typeFilter': 'tipo',
+            'ratingFilter': 'classificacao_indicativa',
+            'accessibilityFilter': 'acessibilidade'
+        };
+        
+        const fieldId = fieldMap[this.id];
+        const field = document.getElementById(fieldId);
+        
+        if (field) {
+            field.disabled = !this.checked;
+            if (!this.checked) {
+                field.value = '';
+            }
+        }
+    });
+});
+
+// Form submission with filter
+document.getElementById('filterForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const params = new URLSearchParams();
+    
+    if (document.getElementById('typeFilter')?.checked) {
+        const tipo = document.getElementById('tipo')?.value;
+        if (tipo) params.append('tipo', tipo);
+    }
+    
+    if (document.getElementById('ratingFilter')?.checked) {
+        const classificacao_indicativa = document.getElementById('classificacao_indicativa')?.value;
+        if (classificacao_indicativa) params.append('classificacao_indicativa', classificacao_indicativa);
+    }
+    
+    if (document.getElementById('accessibilityFilter')?.checked) {
+        const acessibilidade = document.getElementById('acessibilidade')?.value;
+        if (acessibilidade) params.append('acessibilidade', acessibilidade);
+    }
+    
+    // Recarregar página com filtros
+    window.location.href = '/eventos?' + params.toString();
+});
+
+// Reset filters
+function resetFilters() {
+    window.location.href = '/eventos';
+}
+
+// Toggle favorite (se usuário logado)
+<% if (user) { %>
+function toggleFavorite(eventoId) {
+    fetch('/api/favoritos', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ evento_id: eventoId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showNotification(data.message || 'Favorito atualizado!', 'success');
+        } else {
+            showNotification(data.message || 'Erro ao atualizar favorito', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('Erro ao atualizar favorito', 'error');
+    });
+}
+<% } %>
+
+// Marcar checkboxes se há filtros ativos
+document.addEventListener('DOMContentLoaded', function() {
+    <% if (filters && filters.tipo) { %>
+        document.getElementById('typeFilter').checked = true;
+        document.getElementById('tipo').disabled = false;
+    <% } %>
+    <% if (filters && filters.classificacao_indicativa) { %>
+        document.getElementById('ratingFilter').checked = true;
+        document.getElementById('classificacao_indicativa').disabled = false;
+    <% } %>
+    <% if (filters && filters.acessibilidade) { %>
+        document.getElementById('accessibilityFilter').checked = true;
+        document.getElementById('acessibilidade').disabled = false;
+    <% } %>
+});
+</script>
+
+</body>
+</html>
