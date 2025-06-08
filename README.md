@@ -1,5 +1,7 @@
 # EventCalendar - a plataforma de eventos ideal
 
+<img src="assets/logo.png" width=30%>
+
 ## Introdução
 
 ### Descrição do projeto
@@ -14,56 +16,84 @@ Em design, serão produzidos wireframes, assim como protótipos de alta e de bai
 
 O EventCalendar surgiu, então, de uma dor comum a plataformas de eventos: a falta de eficiência e facilidade na hora de inscrever-se para participar de um evento. Nele, torna-se possível agir para tornar a experiência dos usuários cada vez mais agradável, implementando funcionalidades como:
 
-1. Visualizar eventos a um certo raio de distância do usuário e filtrar por proximidade, por tipo (congresso, show, festival, exposição, ...) ou demais filtros (artista, gênero musical, área de estudo, palestrante...)
+1. Visualizar eventos a um certo raio de distância do usuário e filtrar por proximidade, por tipo (congresso, show, festival, exposição, ...) ou demais filtros (artista, gênero musical, área de estudo, palestrante...).
 
-2. Inscrever-se no evento desejado e, assim, unificar o cadastro em sites populares de eventos ou demais websites, visando a otimização do tempo na hora da compra de um ingresso
+2. Inscrever-se no evento desejado e, assim, unificar o cadastro em sites populares de eventos ou demais websites, visando a otimização do tempo na hora da compra de um ingresso.
 
-3. Receber lembretes constantes, por email e pelo site, de eventos desejados que estão chegando e de abertura das vendas de futuros eventos
+3. Receber lembretes constantes, por email e pelo site, de eventos desejados que estão chegando e de abertura das vendas de futuros eventos.
 
-Haverá a integração de um banco de dados relacional, que integrará diversas funcionalidades do site, utilizando a modelagem MVC, ou seja, Model, View e Controller. O uso do MVC, neste caso, auxilia a manter uma melhor organização do projeto e prevenir possíveis erros.
+Há a intagração de banco de dados relacional, que integra diversas funcionalidades do site, utilizando a modelagem MVC, ou seja, Model, View e Controller. O uso do MVC, neste caso, auxilia a manter uma melhor organização do projeto e prevenir possíveis erros.
 
 ### Estrutura das pastas
 
 ```
 ponderada-m2-01/
-├── app.js
 ├── server.js    # Arquivo principal que inicializa o servidor
 ├── package.json    # Gerenciador de dependências do Node.js
 ├── package-lock.json    # Gerenciador de dependências do Node.js
 ├── .gitattributes
 ├── .gitignore
-├── banco_dados.sql
+├── database.sql
 ├── jest.config.js    # Arquivo de configuração do Jest
 ├── rest.http    # Teste de endpoints
 ├── README.md    # Documentação do projeto (Markdown)
 ├── .env    #Arquivo de exemplo para variáveis de ambiente
 ├── assets/
 ├── config/
-│   ├── database.js
+│   └── database.js
 ├── controllers/
 │   ├── userController.js
+│   └── eventoController.js
+├── middleware/
+│   └── auth.js
 ├── documents/
-│   ├── PI-WAD.md
+│   └── PI-WAD.md
 ├── models/
 │   ├── userModel.js
+│   ├── UsuarioModel.js
+│   ├── eventoModel.js
+│   ├── FavoritoModel.js
+│   └── InscricaoModel.js
 ├── routes/
-│   └── frontRoutes.js
-│   └── userRoutes.js
+│   └──api/
+│       ├── auth.js
+│       ├── inscricoes.js
+│       └── favoritos.js
+│   ├── frontRoutes.js
+│   ├── apiRoutes.js
+│   ├── apiExtras.js
+│   ├── index.js
+├── public/
+│   └──css/
+│      └── custom.css
+│   └──assets/
+│   └──scripts/
+│      ├── home.js
+│      └── script.js
 ├── scripts/
-│   └── db.sql
-│   └── runSQLScript.js
+│   ├── init.sql
+│   ├── runSQLScript.js
+│   ├── init-db.js
+│   └── script.js
 ├── services/
 │   └── userService.js
 ├── views/
-│   ├── components/
+│   ├── partials/
 │   │   ├── header.ejs
-│   ├── css/
-│   │   ├── style.css
+│   │   └── sidebar.ejs
 │   ├── layout/
-│   │   ├── style.css
-│   ├── pages/
-│   │   ├── page1.ejs
-│   │   ├── page2.ejs
+│   │   ├── eventos.ejs
+│   │   ├── event-details
+│   │   ├── home.ejs
+│   │   ├── index.ejs
+│   │   ├── login.ejs
+│   │   ├── manage-events.ejs
+│   │   ├── meus-eventos.ejs
+│   │   ├── profile.ejs
+│   │   ├── register.ejs
+│   │   ├── subscription.ejs
+│   │   └── subscription-success.ejs
+│   ├── error.ejs
 ├── tests/
 │   └── userController.test.js
 │   └── userModel.test.js
@@ -79,6 +109,7 @@ ponderada-m2-01/
 * **`views/`**: Views da aplicação.
 * **`services/`**: Serviços auxiliares do sistema.
 *  **`scripts/`**: Arquivos de JavaScript públicos.
+*  **`public/`**: Atualiza informações do front-end
 
 ### Como executar o projeto localmente
 
@@ -94,6 +125,13 @@ npm init -y
 npm install express ejs
 ```
 
+Caso ainda não tenha, instale também:
+```
+npm install pg
+```
+```
+npm install dotenv
+```
 ### Como configurar o banco de dados?
 
 O banco de dados integrado a essa aplicação em específico está presente no Supabase, porém oculto pelo arquivo .gitignore por segurança. 
@@ -130,9 +168,10 @@ npm run init-db
 ```
 Para estabelecer a conexão.
 
-### Como testar as APIs (GET, PUT, POST, DELETE)
+Após fazer o passo a passo para conectar o banco de dados acima, pode inserir no terminal `node server.js` ou `npm start`. O servidor rodará na porta 3000, em `http://localhost:3000/`.
 
-Após fazer o passo a passo para conectar o banco de dados acima, pode inserir no terminal `node server.js`. O servidor rodará na porta 3000, em `http://localhost:3000/api/eventos`.
+
+### Como testar as APIs (GET, PUT, POST, DELETE)
 
 Usando uma plataforma para testar APIs como o Postman, conecte-o com o banco de dados e teste as seguintes requisições:
 
@@ -142,3 +181,10 @@ Usando uma plataforma para testar APIs como o Postman, conecte-o com o banco de 
 4. Excluir um evento (`DELETE /api/eventos/:id`)
 
 Coloque em "id" o id do evento que você deseja editar ou excluir.
+
+Para fazer testes, também pode ser útil instalar o Jest:
+
+```
+npm install --save-dev jest
+```
+Para rodar um teste, basta inserir ```npm test``` no terminal.
