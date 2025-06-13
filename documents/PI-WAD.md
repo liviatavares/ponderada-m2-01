@@ -1123,19 +1123,66 @@ Após utilizar os filtros contidos do lado esquerdo e clicar no botão de filtra
 
 ### 4.1 Demonstração do Sistema Web
 
-*VIDEO: Insira o link do vídeo demonstrativo nesta seção*
-*Descreva e ilustre aqui o desenvolvimento do sistema web completo, explicando brevemente o que foi entregue em termos de código e sistema. Utilize prints de tela para ilustrar.*
+#### 4.1.1. Explicação sobre o sistema
+
+No vídeo abaixo, pode-se observar o funcionamento do website, bem como uma breve explicação sobre a estrutura MVC e uso de funções como o fetch().
+
+<div align="center">
+    <sub>Figura 32: Vídeo Demonstrativo </sub>
+    <br>
+    <img src="/assets/ponderada.mp4" width="80%">
+    <br>
+    <sup>Fonte: Material produzido pela autora (2025)</sup>
+    <br>
+    <br>
+</div>
+
+Em termos de código e sistema, a aplicação está subdividida conforme a arquitetura MVC (Models, Views e Controllers). O model, por exemplo o `eventoModel.js`, cria a lógica de negócios por trás da solução, estruturando a base dos dados e a construção de uma comunicação direta com o banco de dados. O controller, por exemplo o  `eventoController.js`, mantém um intermédio entre os models e entre as views, processando requisições da view, como aquelas contidas no fetch via API, e transportando para os models, de forma a manter uma comunicação ampla entre camadas. As views, como a `home.ejs`, contém o código html e css do site, além de funções de requisição, mostrando para o usuário toda a visualização da plataforma (frontend). Além dessas 3 camadas principais, as rotas ajustam os endpoints do projeto, e o middleware funciona para trazer funções intermediárias de requisição.
+
+#### 4.1.2. Desafios do projeto
+
+Nesse projeto, senti algumas dificuldades. Para essas dificuldades, desenvolvi soluções e obtive importantes aprendizados:
+
+1. Dificuldade: implementar os filtros.
+Solução: Aprender um pouco mais sobre a lógica de filtragem de objetos via javascript, utilizando referência de outros sites e usando IAs para ajudar no aprendizado
+Aprendizado: Como o sistema de filtros funciona e sua implementação em códigos.
+
+2. Dificuldade: deixar o site com CSS mais parecido com o protótipo de alta fidelidade e mais fiel ao guia de estilos.
+Solução: Aprender mais sobre CSS e usar o framework Tailwind para ajuste de ícones.
+Aprendizado: como melhorar o css e como usar o Tailwind para facilitar o ajuste com o protótipo.
+
+3. Dificuldade: implementação do sistema de favoritos e funcionamento para atualização dos favoritos.
+Solução: Estudar sobre a lógica dos favoritos, criando novos arquivos como o `favoritoModel.js` e o `/routes/api/favorito.js`.
+Aprendizado: aprendi sobre como atualizar e criar os favoritos via javascript e sua implementação na arquitetura MVC.
+
 
 ### 4.2 Conclusões e Trabalhos Futuros
 
-*Indique pontos fortes e pontos a melhorar de maneira geral.*
-*Relacione também quaisquer outras ideias que você tenha para melhorias futuras.*
+#### 4.2.1. Pontos fortes da solução
+
+O EventCalendar, na sua versão atual, possui diversos pontos fortes, tais quais:
+
+1. *Uma interface simples e intuitiva:* em questões de acessibilidade, o EventCalendar não requer muita experiência com navegação web para ser totalmente compreendido.
+2. *Design agradável:* Apesar do uso de cores fortes, como o azul e o amarelo, o design do site é simples, coerente e agradável aos olhos do usuário.
+3. *Propósito*: uma plataforma como o EventCalendar ajuda muito os usuários na organização de seus eventos, pois unifica a experiência de procura por eventos.
+
+#### 4.2.2. Pontos a melhorar e prospecções para o futuro
+
+Apesar da satisfação com as atuais features do EventCalendar, há diversos pontos que poderiam ser melhorados e outros a serem adicionados em um desenvolvimento futuro.
+
+1. *Implementação das notificações*: o uso de notificações para avisar quando o evento se aproxima é 
+2. *Melhoria dos filtros e adição de novos filtros*: atualmente, o sistema de filtros ainda não está na sua melhor versão. Com um desenvolvimento futuro, a sidebar de filtragem poderia ser melhorada, e novos filtros poderiam ser adicionados ao sistema. Futuramente, eventos +18 não apareceriam como passíveis de inscrição para usuários com menos de 18 anos, por exemplo.
+4. *Integração e parceria com outros sites de eventos*: isso facilitaria a experiência do usuário de inscrição em diversos eventos de diversos sites.
+5. *Serviços de newsletter e avisos por email*: Isso serviria para avisar de eventos chegando e possíveis eventos que o usuário gostaria de se inscrever.
 
 ---
 
 ## <a name="c5"></a>5. Referências
 
-_Incluir as principais referências de seu projeto, para que seu parceiro possa consultar caso ele se interessar em aprofundar. Um exemplo de referência de livro e de site:_<br>
+Seguem as referências midiáticas que utilizei para desenvolver meu projeto:
 
----
+BOILERPLATE MVC. Repositório de autoria de Afonso Brandão. Disponível em: https://github.com/afonsobrandaointeli/mvc-boilerplate/tree/main
+SYMPLA. Inspiração para a plataforma de eventos. Disponível em: https://www.sympla.com.br
+EVENTIM. Inspiração para a plataforma de eventos. Disponível em: https://www.eventim.com.br
+
 ---
