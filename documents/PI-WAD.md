@@ -1127,7 +1127,7 @@ Após utilizar os filtros contidos do lado esquerdo e clicar no botão de filtra
 
 No vídeo a seguir, pode-se observar o funcionamento do website, bem como uma breve explicação sobre a estrutura MVC e uso de funções como o fetch().
 
-[Clique aqui](https://drive.google.com/file/d/1u7HVyHUyxGQTtB0s55Mr6gEwClYMjj-s/view?usp=drive_link) para ser direcionado para o vídeo demo (no google drive)
+[Clique aqui](https://drive.google.com/file/d/1u7HVyHUyxGQTtB0s55Mr6gEwClYMjj-s/view?usp=sharing) para ser direcionado para o vídeo demo (no google drive)
 
 Em termos de código e sistema, a aplicação está subdividida conforme a arquitetura MVC (Models, Views e Controllers). O model, por exemplo o `eventoModel.js`, cria a lógica de negócios por trás da solução, estruturando a base dos dados e a construção de uma comunicação direta com o banco de dados. O controller, por exemplo o  `eventoController.js`, mantém um intermédio entre os models e entre as views, processando requisições da view, como aquelas contidas no fetch via API, e transportando para os models, de forma a manter uma comunicação ampla entre camadas. As views, como a `home.ejs`, contém o código html e css do site, além de funções de requisição, mostrando para o usuário toda a visualização da plataforma (frontend). Além dessas 3 camadas principais, as rotas ajustam os endpoints do projeto, e o middleware funciona para trazer funções intermediárias de requisição.
 
