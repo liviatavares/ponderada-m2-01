@@ -1130,7 +1130,9 @@ No vídeo abaixo, pode-se observar o funcionamento do website, bem como uma brev
 <div align="center">
     <sub>Figura 32: Vídeo Demonstrativo </sub>
     <br>
-    <img src="/assets/ponderada.mp4" width="80%">
+    <video width="320" height="240" controls>
+      <source src="ponderada.mp4" type="video/mp4">
+    </video>
     <br>
     <sup>Fonte: Material produzido pela autora (2025)</sup>
     <br>
@@ -1170,7 +1172,7 @@ O EventCalendar, na sua versão atual, possui diversos pontos fortes, tais quais
 
 Apesar da satisfação com as atuais features do EventCalendar, há diversos pontos que poderiam ser melhorados e outros a serem adicionados em um desenvolvimento futuro.
 
-1. *Implementação das notificações*: o uso de notificações para avisar quando o evento se aproxima é 
+1. *Implementação das notificações*: o uso de notificações para avisar quando o evento se aproxima é essencial para a aplicação e está contido nas user stories. Essa funcionalidade traria grandes melhorias para o UX do site.
 2. *Melhoria dos filtros e adição de novos filtros*: atualmente, o sistema de filtros ainda não está na sua melhor versão. Com um desenvolvimento futuro, a sidebar de filtragem poderia ser melhorada, e novos filtros poderiam ser adicionados ao sistema. Futuramente, eventos +18 não apareceriam como passíveis de inscrição para usuários com menos de 18 anos, por exemplo.
 4. *Integração e parceria com outros sites de eventos*: isso facilitaria a experiência do usuário de inscrição em diversos eventos de diversos sites.
 5. *Serviços de newsletter e avisos por email*: Isso serviria para avisar de eventos chegando e possíveis eventos que o usuário gostaria de se inscrever.
@@ -1182,7 +1184,9 @@ Apesar da satisfação com as atuais features do EventCalendar, há diversos pon
 Seguem as referências midiáticas que utilizei para desenvolver meu projeto:
 
 BOILERPLATE MVC. Repositório de autoria de Afonso Brandão. Disponível em: https://github.com/afonsobrandaointeli/mvc-boilerplate/tree/main
+
 SYMPLA. Inspiração para a plataforma de eventos. Disponível em: https://www.sympla.com.br
+
 EVENTIM. Inspiração para a plataforma de eventos. Disponível em: https://www.eventim.com.br
 
 ---
